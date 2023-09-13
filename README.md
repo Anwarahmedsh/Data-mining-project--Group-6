@@ -1,2 +1,1 @@
 # miningproject
-students name;
