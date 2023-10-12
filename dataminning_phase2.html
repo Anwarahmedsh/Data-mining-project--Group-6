@@ -161,4 +161,5 @@ rfe_result <- rfe(features, target, sizes = 1:ncol(features), rfeControl = ctrl)
 # Print the RFE result
 print(rfe_result)
 plot(rfe_result)
-#The key output from the RFE method is a ranked list of features based on their importance. The higher-ranked features are considered more important or relevant for predicting the target variable, this helps choosing which features to include or exclude in the  predictive model. so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand.
+#This feature selection graphical representation shows the higher-ranked features that considered more important or relevant for predicting the target variable which are: Survival.Months, Reginol.Node.Positive, X6th.Stage, Progesterone. Status, Age.
+, this helps choosing which features to include or exclude . so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand
