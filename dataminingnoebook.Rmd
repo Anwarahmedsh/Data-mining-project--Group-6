@@ -20,22 +20,23 @@ hist(dataset$Age)
 #A histogram showing the age distribution of women diagnosed with breast cancer. The histogram shows that breast cancer is more common among women whose ages range from 45 t0 50 years(highest frequency).
 
 #pie chart for race
+```{r}
 library(dplyr)
 tab = dataset$Race %>% table()
 precentages = tab %>% prop.table() %>% round(3)*100
 txt = paste0(names(tab), '\n', precentages, '%')
-{r}
 pie(tab, labels = txt, main= 'Race')
+```
 #The pie chat divided the races into three sections with their percentage ( as our dataset shows we have white, black , other). As we see, the white race preset the highest percentage ( 84.8%).
 
 
 
 
 #Scatter Plot
-{r}
+```{r}
 with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
 #This scatter plot has no correlation although we can see that when the tumor size is small the human is more likely to live more months which make sense
-
+```
 
 
 
@@ -76,6 +77,7 @@ print(outmonth)
 #number of rows that has the outlier 
 table(dataset$Survival.Months==outmonth)
 
+```{r}
 #delete the outliers
 dataset = dataset[dataset$Age != outage ,]
 dataset = dataset[dataset$Tumor.Size != outTumorSize ,]
@@ -83,7 +85,7 @@ dataset = dataset[dataset$Regional.Node.Examined != outNodeExamined ,]
 dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
 dataset = dataset[dataset$Survival.Months != outmonth ,]
 nrow(dataset)
-
+```
 #checking if there is any missing value or duplicated rows 
 is.na(dataset)
 sum(is.na(dataset))
