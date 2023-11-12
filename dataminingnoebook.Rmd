@@ -185,3 +185,26 @@ plot(rfe_result)
 #Classification
 
 #Clustring
+```{r}
+library(cluster)
+library(ggplot2)
+
+k_medoids_clustering <- function(data, k) {
+  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
+  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
+  return(k_medoids_result$clustering)  # Return cluster assignments
+}
+# Example usage
+selected_columns <- c("Age", "Survival.Months")  # Select relevant columns
+selected_data <- data[, selected_columns]
+k <- 3  # Number of clusters
+cluster_assignments <- k_medoids_clustering(selected_data, k)
+
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_assignments)
+
+# Create scatter plot with colored clusters
+ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
+  geom_point() +
+  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+```
