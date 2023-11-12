@@ -14,8 +14,9 @@ library(Hmisc)
 describe(dataset)
 summary(dataset)
 #histogram for ages
-{r}
+```{r}
 hist(dataset$Age)
+```
 #A histogram showing the age distribution of women diagnosed with breast cancer. The histogram shows that breast cancer is more common among women whose ages range from 45 t0 50 years(highest frequency).
 
 #pie chart for race
