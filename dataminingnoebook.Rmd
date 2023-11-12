@@ -7,12 +7,14 @@ output:
 
 
 #importing dataset
+```{r}
 setwd("C:/Users/saran/OneDrive")
 dataset = read.csv('BreastCancer1.csv')
 str(dataset)
 library(Hmisc)
 describe(dataset)
 summary(dataset)
+```
 #histogram for ages
 ```{r}
 hist(dataset$Age)
@@ -42,10 +44,12 @@ with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
 
 
 #changing the value IV in Grade attribute
+```{r}
 dataset$Grade[dataset$Grade == ' anaplastic; Grade IV' ] = 4 
 table(dataset$Grade)
-
+```
 #install.packages("outliers")
+```{r}
 library(outliers)
 #outliers of age
 outage= outlier(dataset$Age)
@@ -76,6 +80,7 @@ outmonth = outlier(dataset$Survival.Months)
 print(outmonth)
 #number of rows that has the outlier 
 table(dataset$Survival.Months==outmonth)
+```
 
 ```{r}
 #delete the outliers
