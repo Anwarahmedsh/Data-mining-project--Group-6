@@ -461,8 +461,15 @@ elbow_plot <- ggplot() +
 
 print(elbow_plot)
 ```
-
-
+#another code for elbow method
+```{r}
+# 3- Elbow method
+#fviz_nbclust() with within cluster sums of squares (wss) method
+library(factoextra) 
+fviz_nbclust(dataset, pam, method = "wss") +
+  geom_vline(xintercept = 4, linetype = 2)+
+  labs(subtitle = "Elbow method")
+```
 
 ```{r}
 # Plot Silhouette values against k values
