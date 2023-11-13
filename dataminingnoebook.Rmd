@@ -759,13 +759,30 @@ fviz_nbclust(dataset, pam, method = "wss") +
 ```
 
 ```{r}
-# Plot Silhouette values against k values
-silhouette_plot <- ggplot() +
-  geom_line(aes(x = 2:max_k, y = silhouette_values[2:max_k])) +
-  geom_point(aes(x = 2:max_k, y = silhouette_values[2:max_k])) +
-  labs(title = "Silhouette Coefficient", x = "Number of Clusters (k)", y = "Silhouette Coefficient")
+# Perform scaling on the data
+scaled_data <- scale(data)
 
-print(silhouette_plot)
+# Required libraries
+library(fpc)
+library(ggplot2)
+
+# Determine the optimal number of clusters using the silhouette method
+sil_scores <- c()
+for (k in 2:10) {
+  kmedoids_result <- pam(scaled_data, k = k)
+  dissimilarity <- as.dist(dist(scaled_data))
+  sil_scores[k-1] <- cluster.stats(dissimilarity, kmedoids_result$clustering)$avg.silwidth
+}
+
+# Plot the silhouette scores
+k_values <- 2:10
+silhouette_df <- data.frame(k = k_values, silhouette_score = sil_scores)
+ggplot(silhouette_df, aes(x = k, y = silhouette_score)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Number of Clusters (k)", y = "Silhouette Score") +
+  ggtitle("Silhouette Score vs. Number of Clusters")
+
 ```
 even though i made all coloums numreic, removed the missing vaules, tried another methods like k-means, hierarchial methods, still i encontered errors. but here is the code
 ```{r}
