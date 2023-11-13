@@ -757,7 +757,7 @@ fviz_nbclust(dataset, pam, method = "wss") +
   geom_vline(xintercept = 4, linetype = 2)+
   labs(subtitle = "Elbow method")
 ```
-
+The resulting plot helps visualize the trend in silhouette scores as the number of clusters (k) increases. It allows  to identify the optimal number of clusters based on the highest silhouette score, which indicates better clustering quality and separation of data points within their assigned clusters. here we have the optimal k=6
 ```{r}
 # Perform scaling on the data
 scaled_data <- scale(data)
