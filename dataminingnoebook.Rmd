@@ -530,6 +530,12 @@ accsni <- co_resultsui$overall["Accuracy"]
 accsni
 ```
 #Clustring
+#For clustering I chose k-medioid method because it the best fit with my dataset, I tried three Ks 4,5,6.
+By my understanding I found that 4 is the best K because the points well
+distributed. I chose the attributes survival months and age after trying multiple attributes i found they give the best results.
+
+
+
 #Clustr of size=4
 #this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
 ```{r}
