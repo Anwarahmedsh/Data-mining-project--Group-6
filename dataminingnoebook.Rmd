@@ -851,7 +851,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 
 ```
 
-
+#here you can run the cluster with k=5 and see its graph and b-cubed results
 ```{r}
 
 # Convert relevant columns to numeric
@@ -918,7 +918,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 
 ```
 
-
+#here you can run the cluster with k=6 and see its graph and b-cubed results
 ```{r}
 
 # Convert relevant columns to numeric
