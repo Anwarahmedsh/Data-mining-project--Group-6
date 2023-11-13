@@ -532,6 +532,7 @@ accsni
 
 
 ```
+
 #Clustring
 #Clustr of size=4
 #this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
@@ -555,8 +556,6 @@ numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.
 numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
 numeric_dataset$Status = as.numeric(as.character(dataset$Status))
 str(numeric_dataset)
-
-
 library(cluster)
 library(ggplot2)
 # Assuming 'data' is your object
@@ -610,8 +609,6 @@ numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.
 numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
 numeric_dataset$Status = as.numeric(as.character(dataset$Status))
 str(numeric_dataset)
-
-
 library(cluster)
 library(ggplot2)
 # Assuming 'data' is your object
@@ -647,7 +644,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 
 
 #Clustr of size=6
-#this number was chosen randomlly
+#this number was chosen after applying Silhouette coefficient which indicate 6 as the optimal k
 ```{r}
 #Converting interger&factor columns to numeric SO we can perform k-means
 numeric_dataset = dataset
