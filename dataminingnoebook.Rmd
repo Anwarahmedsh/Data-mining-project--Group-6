@@ -833,7 +833,7 @@ ggplot(silhouette_df, aes(x = k, y = silhouette_score)) +
   ggtitle("Silhouette Score vs. Number of Clusters")
 
 ```
-#here you can run the cluster and see BCubed precision and recall result thet we performed on the clustering method with k=4, B-Cubed precision and recall values are both 1, it suggests that the cluster assignments perfectly match the true labels. This indicates that the clustering algorithm has achieved a perfect separation of the data into distinct clusters based on the selected features. the clustering results are ideal, and the B-Cubed precision and recall metrics reflect the high quality of the clustering outcome.
+#here you can run the cluster and see BCubed precision and recall result thet we performed on the clustering method with k=4, "B-Cubed Precision: 0.00150338261087447""B-Cubed Recall: 0.00150338261087447" #The results are similar It could that when the clusters are well-separated and distinct, a clustering algorithm might assign instances to clusters with a high degree of accuracy, leading to similar precision and recall values
 ```{r}
 # Convert relevant columns to numeric
 numeric_dataset <- dataset
@@ -1102,7 +1102,5 @@ library(ggplot2)
 ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   geom_point() +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
-
-
-
 ```
+#by the provided code for each classification and clustering you can definitely tell that the classification is the best fit for our dataset since we have high accuracy= 0.9 unlike with the clustering=0.00150338261087447
