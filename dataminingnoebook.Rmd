@@ -581,7 +581,7 @@ consistency across different partitions and attribute selection methods is a pos
 #Clustring
 #For clustering I chose k-medioid method because it the best fit with my dataset, I tried three Ks 4,5,6.
 By my understanding I found that 4 is the best K because the points well
-distributed. I chose the attributes survival months and age after trying multiple attributes i found they give the best results.
+distributed. I chose the attributes survival months and age after trying multiple attributes i found they give the best results, and also they fit with our goal of clustring that we specicfied in phase 1
 
 The resulting plot displays a scatter plot where each data point is represented as a point on the plot. The points are colored based on their assigned cluster, allowing for visual exploration of the clustering results. The plot title and axis labels provide additional context for interpreting the plot, this plot shows 4 clusters for this dataset and is chosen as the optimal k number
 
