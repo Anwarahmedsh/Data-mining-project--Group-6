@@ -899,18 +899,23 @@ recall <- precision_recall$recall
 print(paste("B-Cubed Precision:", precision))
 print(paste("B-Cubed Recall:", recall))
 
-# Convert cluster assignments to integer codes
-cluster_codes <- as.integer(cluster_codes)
+# Define function to compute average silhouette for k clusters using silhouette()
+silhouette_score <- function(data, k) {
+  cluster_assignments <- k_medoids_clustering(data, k)
+  ss <- silhouette(cluster_assignments, dist(data))
+  sil <- mean(ss[, 3])
+  return(sil)
+}
 
-# Calculate dissimilarity matrix with integer row names
-diss_matrix <- as.dist(dist(selected_data))
-rownames(diss_matrix) <- as.integer(rownames(diss_matrix))
+# k cluster range from 2 to 10
+k <- 2:10
 
-# Calculate Silhouette score
-silhouette_avg <- silhouette(diss_matrix, cluster_codes)$avg.width
+# Call function for each k value
+avg_sil <- sapply(k, function(k_val) silhouette_score(selected_data[, c('Age', 'Survival.Months')], k_val))
 
-# Print the average Silhouette score
-print(paste("Average Silhouette:", silhouette_avg))
+# Plot the results
+plot(k, avg_sil, type = 'b', xlab = 'Number of clusters', ylab = 'Average Silhouette Scores', frame = FALSE)
+
 
 # Create scatter plot with colored clusters
 library(ggplot2)
@@ -989,18 +994,23 @@ recall <- precision_recall$recall
 print(paste("B-Cubed Precision:", precision))
 print(paste("B-Cubed Recall:", recall))
 
-# Convert cluster assignments to integer codes
-cluster_codes <- as.integer(cluster_codes)
+# Define function to compute average silhouette for k clusters using silhouette()
+silhouette_score <- function(data, k) {
+  cluster_assignments <- k_medoids_clustering(data, k)
+  ss <- silhouette(cluster_assignments, dist(data))
+  sil <- mean(ss[, 3])
+  return(sil)
+}
 
-# Calculate dissimilarity matrix with integer row names
-diss_matrix <- as.dist(dist(selected_data))
-rownames(diss_matrix) <- as.integer(rownames(diss_matrix))
+# k cluster range from 2 to 10
+k <- 2:10
 
-# Calculate Silhouette score
-silhouette_avg <- silhouette(diss_matrix, cluster_codes)$avg.width
+# Call function for each k value
+avg_sil <- sapply(k, function(k_val) silhouette_score(selected_data[, c('Age', 'Survival.Months')], k_val))
 
-# Print the average Silhouette score
-print(paste("Average Silhouette:", silhouette_avg))
+# Plot the results
+plot(k, avg_sil, type = 'b', xlab = 'Number of clusters', ylab = 'Average Silhouette Scores', frame = FALSE)
+
 
 # Create scatter plot with colored clusters
 library(ggplot2)
@@ -1083,18 +1093,23 @@ recall <- precision_recall$recall
 print(paste("B-Cubed Precision:", precision))
 print(paste("B-Cubed Recall:", recall))
 
-# Convert cluster assignments to integer codes
-cluster_codes <- as.integer(cluster_codes)
+# Define function to compute average silhouette for k clusters using silhouette()
+silhouette_score <- function(data, k) {
+  cluster_assignments <- k_medoids_clustering(data, k)
+  ss <- silhouette(cluster_assignments, dist(data))
+  sil <- mean(ss[, 3])
+  return(sil)
+}
 
-# Calculate dissimilarity matrix with integer row names
-diss_matrix <- as.dist(dist(selected_data))
-rownames(diss_matrix) <- as.integer(rownames(diss_matrix))
+# k cluster range from 2 to 10
+k <- 2:10
 
-# Calculate Silhouette score
-silhouette_avg <- silhouette(diss_matrix, cluster_codes)$avg.width
+# Call function for each k value
+avg_sil <- sapply(k, function(k_val) silhouette_score(selected_data[, c('Age', 'Survival.Months')], k_val))
 
-# Print the average Silhouette score
-print(paste("Average Silhouette:", silhouette_avg))
+# Plot the results
+plot(k, avg_sil, type = 'b', xlab = 'Number of clusters', ylab = 'Average Silhouette Scores', frame = FALSE)
+
 
 # Create scatter plot with colored clusters
 library(ggplot2)
