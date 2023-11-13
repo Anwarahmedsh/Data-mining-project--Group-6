@@ -473,6 +473,7 @@ silhouette_plot <- ggplot() +
 
 print(silhouette_plot)
 ```
+even though i made all coloums numreic, removed the missing vaules, tried another methods like k-means, hierarchial methods, still i encontered errors. but here is the code
 ```{r}
 # Calculate BCubed precision and recall
 bcubed_precision <- cluster.stats(cluster_assignments, dataset)$avg.precision
