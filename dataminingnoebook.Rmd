@@ -238,7 +238,16 @@ precision(as.table(co_result))
 acc <- co_result$overall["Accuracy"]
 acc
 ```
+The formula myFormula is used to define the target variable (Status) and predictor variables for the classification.
 
+We made decision tree classification using the ID3 algorithm (information gain) on a dataset then we split the dataset into 70% training and 30% testing. 
+For visualization the tree 
+In this case, the output lists the variables that are actually used in constructing the classification tree which are
+the following variables are used: Age, Estrogen.Status, Reginol.Node.Positive, Regional.Node.Examined, Survival.Months, and Tumor.Size to know the status (0 dead, 1 alive).
+Survival months has the highest Information Gain so it’s chosen as the splitting criterion at each node of the decision tree.
+
+For the Predictions , they are made on the test set using the trained decision tree.
+we calculated confusion matrix, sensitivity, specificity, precision, and overall accuracy . And the accuracy was high which indicates that a significant portion of the predictions made by the model match the actual outcomes in the test dataset as well as the other measurments.
 ```{r}
 # Using CART with rpart
 #tree 2 using gini index
@@ -264,6 +273,12 @@ precision(as.table(co_resultc))
 accc <- co_resultc$overall["Accuracy"]
 accc
 ```
+We made decision tree classification using the CARAT algorithm (gini index) on a dataset then we split the dataset into 70% training and 30% testing. 
+For visualization the tree 
+In this case, the tree is built using the variables Age, Estrogen.Status, Reginol.Node.Positive, Regional.Node.Examined, and Survival.Months to know the status (0 dead, 1 alive).
+Survival months has minimum Gini index so it’s the root.
+For the Predictions , they are made on the test set using the trained decision tree.
+we calculated confusion matrix, sensitivity, specificity, precision, and overall accuracy . And the accuracy was high which indicates that a significant portion of the predictions made by the model match the actual outcomes in the test dataset.
 
 ```{r}
 #tree3 using gain ratio
@@ -306,8 +321,15 @@ accs <- co_results$overall["Accuracy"]
 accs
 
 ```
-
+We made decision tree classification using the C5.0 algorithm (gain ratio) on a dataset then we split the dataset into 70% training and 30% testing. 
+For visualization the tree 
+In this case, The most important attribute is "Survival.Months" with 100% usage, followed by "Age," "Estrogen.Status," and "N.Stage.".
+The size of the tree is indicated by the number of nodes. In this case, the tree has a size of 5 nodes.
+The tree has 236 errors, representing a misclassification rate of 9.8%
+For the Predictions , they are made on the test set using the trained decision tree.
+we calculated confusion matrix, sensitivity, specificity, precision, and overall accuracy . And the accuracy was high which indicates that a significant portion of the predictions made by the model match the actual outcomes in the test dataset.
 ```{r}
+
 # Split the dataset into 80% training and 20% testing subsets
 indfo <- sample(2, nrow(dataset), replace = TRUE, prob = c(0.8 , 0.2))
 trainData <- dataset[indfo == 1,]
@@ -346,7 +368,16 @@ precision(as.table(coresult))
 accur<- coresult$overall["Accuracy"]
 accur
 ```
+The formula myFormula is used to define the target variable (Status) and predictor variables for the classification.
 
+We made decision tree classification using the ID3 algorithm (information gain) on a dataset then we split the dataset into 80% training and 20% testing. 
+For visualization the tree 
+In this case, the output lists the variables that are actually used in constructing the classification tree which are
+the following variables are used: Age, Estrogen.Status, Reginol.Node.Positive, Survival.Months, and Tumor.Size to know the status (0 dead, 1 alive).
+Survival months has the highest Information Gain so it’s chosen as the splitting criterion at each node of the decision tree.
+
+For the Predictions , they are made on the test set using the trained decision tree.
+we calculated confusion matrix, sensitivity, specificity, precision, and overall accuracy . And the accuracy was high which indicates that a significant portion of the predictions made by the model match the actual outcomes in the test dataset.
 ```{r}
 #tree5 using gini index
 # Using CART with rpart
@@ -373,6 +404,13 @@ precision(as.table(co_resultcg))
 acccu<- co_resultcg$overall["Accuracy"]
 acccu
 ```
+We made decision tree classification using the CARAT algorithm (gini index) on a dataset then we split the dataset into 80% training and 20% testing. 
+For visualization the tree 
+In this case, the tree is built using the variables Age, Estrogen.Status, Reginol.Node.Positive, Regional.Node.Examined, Tumor.size , survival months to know the status (0 dead, 1 alive).
+Survival months has minimum Gini index so it’s the root.
+
+For the Predictions , they are made on the test set using the trained decision tree.
+we calculated confusion matrix, sensitivity, specificity, precision, and overall accuracy . And the accuracy was high which indicates that a significant portion of the predictions made by the model match the actual outcomes in the test dataset as well as the other measurements
 
 ```{r}
 #tree6 using gain ratio
