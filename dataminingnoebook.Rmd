@@ -454,7 +454,8 @@ specificity(as.table(co_resultsu))
 accsn <- co_resultsu$overall["Accuracy"]
 accsn
 ```
-
+The following is a 20% testing and 80% Training information gain ratio created where the classification label is known (pre-classified) for each record. Next, the algorithm systematically assigns each record to one of two subsets on the some basis ( Survival.Month > 0.429 or Survival.Month <=0.429). The object is to attain an homogeneous set of labels in each partitionThis partitioning (splitting) is then applied to each of the new partitions. The process continues until no more useful splits can be found. 
+The goal is to build a tree that distinguishes among the classes. For sensitivity, sensitivity, accuracy, precision and a lot of other measures. as we can see below the sensitivity of the tree says its 42% correctly identified by the classifier which is not a really perfect thing but the rest of the measures were great 
 ```{r}
 # Split the dataset into 60% training and 40% testing subsets
 indfod<- sample(2, nrow(dataset), replace = TRUE, prob = c(0.6 , 0.4))
@@ -497,7 +498,8 @@ precision(as.table(coresulty))
 accury<- coresulty$overall["Accuracy"]
 accury
 ```
-
+ A 60% Training Set is created where the classification label is known (pre-classified) for each record. Next, the algorithm systematically assigns each record to one of two subsets on the some basis whether ( Survival.Month <0.43) or not . The object is to attain an homogeneous set of labels in each partitionThis partitioning (splitting) is then applied to each of the new partitions. The process continues until no more useful splits can be found. 
+The goal is to build a tree that distinguishes among the classes. For sensitivity, sensitivity, accuracy, precision and a lot of other measures. as we can see below the sensitivity of the tree says its 49% correctly identified by the classifier which is not a really perfect thing but the rest of the measures were great 
 ```{r}
 #tree 8 using gini index
 # Using CART with rpart
@@ -525,7 +527,8 @@ precision(as.table(co_resultcge))
 acccue<- co_resultcge$overall["Accuracy"]
 acccue
 ```
-
+ The following is a 40% testing and 60% Training gini index created where the classification label is known (pre-classified) for each record. Next, the algorithm systematically assigns each record to one of two subsets on the some basis whether ( Survival.Month <0.43) or not . The object is to attain an homogeneous set of labels in each partitionThis partitioning (splitting) is then applied to each of the new partitions. The process continues until no more useful splits can be found. 
+The goal is to build a tree that distinguishes among the classes. For sensitivity, sensitivity, accuracy, precision and a lot of other measures. as we can see below the sensitivity of the tree says its 48% correctly identified by the classifier which is not a really perfect thing but the rest of the measures were great 
 ```{r}
 #tree 9 using gain ratio
 # Install and load the C50 package if not already installed
@@ -567,6 +570,14 @@ precision(as.table(co_resultsui))
 accsni <- co_resultsui$overall["Accuracy"]
 accsni
 ```
+ The following is a 40% testing and 60% Training information gain ratio created where the classification label is known (pre-classified) for each record. Next, the algorithm systematically assigns each record to one of two subsets on the some basis whether ( Survival.Month > 0.429 or Survival.Month <=0.429).not . The object is to attain an homogeneous set of labels in each partitionThis partitioning (splitting) is then applied to each of the new partitions. The process continues until no more useful splits can be found. 
+The goal is to build a tree that distinguishes among the classes. For sensitivity, sensitivity, accuracy, precision and a lot of other measures. as we can see below the sensitivity of the tree says its 45% correctly identified by the classifier which is not a really perfect thing but the rest of the measures were great 
+
+In summary, the three partitions (0.7 , 0.3 and 0.6 , 0.4 and 0.8 , 0.2) and the three attributes selection (IG, IG ratio, gini index)  lead to similar results , such as all of them have an accuracy above 0.9 and other measurements have similar results.
+This is a positive sign indicating that the model's performance is consistent and not overly dependent on specific choices.
+Information Gain, Information Gain Ratio, and Gini Index algorithms lead to similar results, it indicates that, these metrics are providing comparable insights into the dataset.
+consistency across different partitions and attribute selection methods is a positive signal, it's advisable to perform thorough evaluation, including testing on a separate dataset, to ensure the model's reliability and generalization capabilities
+
 #Clustring
 #For clustering I chose k-medioid method because it the best fit with my dataset, I tried three Ks 4,5,6.
 By my understanding I found that 4 is the best K because the points well
