@@ -929,6 +929,8 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 ```
 
 #here you can run the cluster with k=5 and see its graph and b-cubed results
+ "B-Cubed Precision: 0.00125281884239539"
+ "B-Cubed Recall: 0.00125281884239539"
 ```{r}
 # Convert relevant columns to numeric
 numeric_dataset <- dataset
