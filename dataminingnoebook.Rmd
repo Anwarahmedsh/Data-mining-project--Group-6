@@ -243,6 +243,8 @@ plot(rfe_result)
 
 ```
 #Clustring
+#Clustr of size=4
+#this number was chosen randomlly
 ```{r}
 #Converting interger&factor columns to numeric SO we can perform k-means
 numeric_dataset = dataset
@@ -296,6 +298,123 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 ```
 
+#Clustr of size=5
+#this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
+```{r}
+#Converting interger&factor columns to numeric SO we can perform k-means
+numeric_dataset = dataset
+numeric_dataset$Age = as.numeric(as.character(dataset$Age))
+numeric_dataset$Race = as.numeric(as.character(dataset$Race))
+numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
+numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
+numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
+numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
+numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
+numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
+numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
+numeric_dataset$Tumor.Size = as.numeric(as.character(dataset$Tumor.Size))
+numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
+numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
+numeric_dataset$Regional.Node.Examined = as.numeric(as.character(dataset$Regional.Node.Examined))
+numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.Node.Positive))
+numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
+numeric_dataset$Status = as.numeric(as.character(dataset$Status))
+str(numeric_dataset)
+
+
+library(cluster)
+library(ggplot2)
+# Assuming 'data' is your object
+if (class(data) == "data.frame") {
+  # Your code for subsetting columns here
+} else {
+  # Handle the case where 'data' is not a data frame
+  print("The 'data' object is not a data frame.")
+}
+
+k_medoids_clustering <- function(data, k) {
+  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
+  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
+  return(k_medoids_result$clustering)  # Return cluster assignments
+}
+# Example usage
+selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_data <- numeric_dataset[, selected_columns]
+k <- 5 # Number of clusters
+cluster_assignments <- k_medoids_clustering(selected_data, k)
+
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_assignments)
+
+
+# Create scatter plot with colored clusters
+ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
+  geom_point() +
+  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+```
+
+
+
+
+#Clustr of size=6
+#this number was chosen randomlly
+```{r}
+#Converting interger&factor columns to numeric SO we can perform k-means
+numeric_dataset = dataset
+numeric_dataset$Age = as.numeric(as.character(dataset$Age))
+numeric_dataset$Race = as.numeric(as.character(dataset$Race))
+numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
+numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
+numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
+numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
+numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
+numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
+numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
+numeric_dataset$Tumor.Size = as.numeric(as.character(dataset$Tumor.Size))
+numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
+numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
+numeric_dataset$Regional.Node.Examined = as.numeric(as.character(dataset$Regional.Node.Examined))
+numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.Node.Positive))
+numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
+numeric_dataset$Status = as.numeric(as.character(dataset$Status))
+str(numeric_dataset)
+
+
+library(cluster)
+library(ggplot2)
+# Assuming 'data' is your object
+if (class(data) == "data.frame") {
+  # Your code for subsetting columns here
+} else {
+  # Handle the case where 'data' is not a data frame
+  print("The 'data' object is not a data frame.")
+}
+
+k_medoids_clustering <- function(data, k) {
+  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
+  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
+  return(k_medoids_result$clustering)  # Return cluster assignments
+}
+# Example usage
+selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_data <- numeric_dataset[, selected_columns]
+k <- 6 # Number of clusters
+cluster_assignments <- k_medoids_clustering(selected_data, k)
+
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_assignments)
+
+
+# Create scatter plot with colored clusters
+ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
+  geom_point() +
+  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+```
+
+
+
+#here we evaluated the cluster, by determining the number of clusters we can control the proper granularity of cluster analysis
+
 ```{r}
 library(cluster)
 library(ggplot2)
@@ -342,6 +461,9 @@ elbow_plot <- ggplot() +
 
 print(elbow_plot)
 ```
+
+
+
 ```{r}
 # Plot Silhouette values against k values
 silhouette_plot <- ggplot() +
