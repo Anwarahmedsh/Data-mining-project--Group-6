@@ -244,7 +244,7 @@ plot(rfe_result)
 ```
 #Clustring
 #Clustr of size=4
-#this number was chosen randomlly
+#this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
 ```{r}
 #Converting interger&factor columns to numeric SO we can perform k-means
 numeric_dataset = dataset
@@ -299,7 +299,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 ```
 
 #Clustr of size=5
-#this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
+#this number was chosen randomlly
 ```{r}
 #Converting interger&factor columns to numeric SO we can perform k-means
 numeric_dataset = dataset
