@@ -294,9 +294,9 @@ selected_data$Cluster <- as.factor(cluster_assignments)
 ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   geom_point() +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+```
 
-
-
+```{r}
 library(cluster)
 library(ggplot2)
 
@@ -341,8 +341,8 @@ elbow_plot <- ggplot() +
   labs(title = "Elbow Method", x = "Number of Clusters (k)", y = "Within-Cluster Sum of Squares (WSS)")
 
 print(elbow_plot)
-
-
+```
+```{r}
 # Plot Silhouette values against k values
 silhouette_plot <- ggplot() +
   geom_line(aes(x = 2:max_k, y = silhouette_values[2:max_k])) +
