@@ -784,7 +784,7 @@ ggplot(silhouette_df, aes(x = k, y = silhouette_score)) +
   ggtitle("Silhouette Score vs. Number of Clusters")
 
 ```
-#here you can run the cluster and see BCubed precision and recall result, B-Cubed precision and recall values are both 1, it suggests that the cluster assignments perfectly match the true labels. This indicates that the clustering algorithm has achieved a perfect separation of the data into distinct clusters based on the selected features. the clustering results are ideal, and the B-Cubed precision and recall metrics reflect the high quality of the clustering outcome.
+#here you can run the cluster and see BCubed precision and recall result thet we performed on the clustering method with k=4, B-Cubed precision and recall values are both 1, it suggests that the cluster assignments perfectly match the true labels. This indicates that the clustering algorithm has achieved a perfect separation of the data into distinct clusters based on the selected features. the clustering results are ideal, and the B-Cubed precision and recall metrics reflect the high quality of the clustering outcome.
 ```{r}
 
 # Convert relevant columns to numeric
