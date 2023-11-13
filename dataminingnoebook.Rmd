@@ -351,3 +351,14 @@ silhouette_plot <- ggplot() +
 
 print(silhouette_plot)
 ```
+```{r}
+# Calculate BCubed precision and recall
+bcubed_precision <- cluster.stats(cluster_assignments, dataset)$avg.precision
+bcubed_recall <- cluster.stats(cluster_assignments, dataset)$avg.recall
+
+# Print the results
+cat("Silhouette coefficient:", silhouette_coefficient, "\n")
+cat("BCubed precision:", bcubed_precision, "\n")
+cat("BCubed recall:", bcubed_recall, "\n")
+
+```
