@@ -184,62 +184,352 @@ plot(rfe_result)
 
 #Classification
 ```{r}
+dataset$Status <- factor(dataset$Status)
+# Set the random seed for reproducibility
+set.seed(1234)
+
+# Split the dataset into training 70% and testing 30% subsets
+ind <- sample(2, nrow(dataset), replace = TRUE, prob = c(0.7 , 0.3))
+trainData <- dataset[ind == 1,]
+testData <- dataset[ind == 2,]
+myFormula <- Status ~ Age + Marital.Status + Race + T.Stage + N.Stage + X6th.Stage + differentiate + Grade + A.Stage + Tumor.Size + Estrogen.Status + Progesterone.Status + Reginol.Node.Positive + Regional.Node.Examined + Survival.Months 
+```
+
+```{r}
+# Load the necessary library
+install.packages('party')
+library(party)
+install.packages("rpart")
+install.packages('rpart.plot')
+library('rpart.plot')
+library(rpart)
+#tree 1 for information gain 
+# Using ID3 with rpart
+dataset.id3 <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "information"))
+printcp(dataset.id3)  # Display cp table for pruning
+```
+
+```{r}
+# Plot the decision tree1
+rpart.plot(dataset.id3)
+```
+
+```{r}
+text(dataset.id3)
+```
+
+```{r}
+# Make predictions on the test set
+testPred <- predict(dataset.id3, newdata = testData, type = "class")
+result <- table(testPred, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+install.packages("caret")
+install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+co_result <- confusionMatrix(result)
+print(co_result)
+sensitivity(as.table(co_result))
+specificity(as.table(co_result))
+precision(as.table(co_result))
+acc <- co_result$overall["Accuracy"]
+acc
+```
+
+```{r}
+# Using CART with rpart
+#tree 2 using gini index
+dataset.cart <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "gini"))
+# Plot the decision tree
+library(rpart.plot)
+rpart.plot(dataset.cart)
+```
+
+```{r}
+#the result
+testPredc <- predict(dataset.cart, newdata = testData, type = "class")
+resultc <- table(testPredc, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+co_resultc <- confusionMatrix(resultc)
+print(co_resultc)
+sensitivity(as.table(co_resultc))
+specificity(as.table(co_resultc))
+precision(as.table(co_resultc))
+accc <- co_resultc$overall["Accuracy"]
+accc
+```
+
+```{r}
+#tree3 using gain ratio
+# Install and load the C50 package if not already installed
+# install.packages("C50")
+library(C50)
+library(partykit)
+library(party)
+# Using C4.5 (C5.0) with C50
+dataset.c45 <- C5.0(myFormula, data = trainData)
+# Print the tree rules
+summary(dataset.c45)
+```
+
+```{r}
+# Make predictions on the test set
+testPreds <- predict(dataset.c45, newdata = testData)
+results <- table(testPreds, testData$Status)
+c45_party <- as.party(dataset.c45)
+```
+
+```{r}
+# Plot the decision tree
+plot(c45_party)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+
+co_results <- confusionMatrix(results)
+print(co_results)
+sensitivity(as.table(co_results))
+specificity(as.table(co_results))
+precision(as.table(co_results))
+accs <- co_results$overall["Accuracy"]
+accs
 
 ```
 
 ```{r}
+# Split the dataset into 80% training and 20% testing subsets
+indfo <- sample(2, nrow(dataset), replace = TRUE, prob = c(0.8 , 0.2))
+trainData <- dataset[indfo == 1,]
+testData <- dataset[indfo == 2,]
+```
+
+```{r}
+# tree4 using information gain
+# Using ID3 with rpart
+datasetID3 <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "information"))
+print(datasetID3)  # Display cp table for pruning
+
+# Plot the decision tree
+rpart.plot(datasetID3)
+text(datasetID3)
 
 ```
 
 ```{r}
+# Make predictions on the test set
+testPredec <- predict(datasetID3, newdata = testData, type = "class")
+resultdd<- table(testPredec, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+coresult <- confusionMatrix(resultdd)
+print(coresult)
+sensitivity(as.table(coresult))
+specificity(as.table(coresult))
+precision(as.table(coresult))
+accur<- coresult$overall["Accuracy"]
+accur
+```
+
+```{r}
+#tree5 using gini index
+# Using CART with rpart
+datasetcart <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "gini"))
+
+# Plot the decision tree
+library(rpart.plot)
+rpart.plot(dataset.cart)
+```
+
+```{r}
+#result
+testPredcs<- predict(datasetcart, newdata = testData, type = "class")
+resultcs <- table(testPredcs, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+co_resultcg <- confusionMatrix(resultcs)
+print(co_resultcg)
+sensitivity(as.table(co_resultcg))
+specificity(as.table(co_resultcg))
+precision(as.table(co_resultcg))
+acccu<- co_resultcg$overall["Accuracy"]
+acccu
+```
+
+```{r}
+#tree6 using gain ratio
+# Install and load the C50 package if not already installed
+# install.packages("C50")
+library(C50)
+library(partykit)
+library(party)
+# Using C4.5 (C5.0) with C50
+datasetc45 <- C5.0(myFormula, data = trainData)
+# Print the tree rules
+summary(datasetc45)
+```
+
+```{r}
+# Make predictions on the test set
+testPredsn <- predict(datasetc45, newdata = testData)
+resultsn<- table(testPredsn, testData$Status)
+c45party <- as.party(datasetc45)
 
 ```
 
 ```{r}
+# Plot the decision tree
+plot(c45party)
 
 ```
 
 ```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+
+co_resultsu <- confusionMatrix(resultsn)
+print(co_resultsu)
+sensitivity(as.table(co_resultsu))
+specificity(as.table(co_resultsu))
+
+accsn <- co_resultsu$overall["Accuracy"]
+accsn
+```
+
+```{r}
+# Split the dataset into 60% training and 40% testing subsets
+indfod<- sample(2, nrow(dataset), replace = TRUE, prob = c(0.6 , 0.4))
+trainData <- dataset[indfod== 1,]
+testData <- dataset[indfod == 2,]
+```
+
+```{r}
+#tree 7 using information gain
+# Using ID3 with rpart
+datasetID3.<- rpart(myFormula, data = trainData, method = "class", parms = list(split = "information"))
+print(datasetID3)  # Display cp table for pruning
 
 ```
 
 ```{r}
+# Plot the decision tree
+rpart.plot(datasetID3.)
+text(datasetID3.)
+```
 
+```{r}
+# Make predictions on the test set
+testPredecy<- predict(datasetID3, newdata = testData, type = "class")
+resultddy<- table(testPredecy, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+
+coresulty <- confusionMatrix(resultddy)
+print(coresulty)
+sensitivity(as.table(coresulty))
+specificity(as.table(coresulty))
+precision(as.table(coresulty))
+accury<- coresulty$overall["Accuracy"]
+accury
+```
+
+```{r}
+#tree 8 using gini index
+# Using CART with rpart
+datasetcart. <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "gini"))
+
+# Plot the decision tree
+library(rpart.plot)
+rpart.plot(dataset.cart)
+```
+
+```{r}
+#result
+
+testPredcse<- predict(datasetcart., newdata = testData, type = "class")
+resultcse <- table(testPredcse, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+co_resultcge <- confusionMatrix(resultcse)
+print(co_resultcge)
+sensitivity(as.table(co_resultcge))
+specificity(as.table(co_resultcge))
+precision(as.table(co_resultcge))
+acccue<- co_resultcge$overall["Accuracy"]
+acccue
+```
+
+```{r}
+#tree 9 using gain ratio
+# Install and load the C50 package if not already installed
+# install.packages("C50")
+library(C50)
+library(partykit)
+library(party)
+# Using C4.5 (C5.0) with C50
+datasetc45. <- C5.0(myFormula, data = trainData)
+
+# Print the tree rules
+summary(datasetc45.)
 ```
 
 ```{r}
 
+# Make predictions on the test set
+testPredsni <- predict(datasetc45., newdata = testData)
+resultsni<- table(testPredsni, testData$Status)
+c45party. <- as.party(datasetc45.)
 ```
 
 ```{r}
-
+# Plot the decision tree
+plot(c45party.)
 ```
 
 ```{r}
-
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+co_resultsui <- confusionMatrix(resultsni)
+print(co_resultsui)
+sensitivity(as.table(co_resultsui))
+specificity(as.table(co_resultsui))
+precision(as.table(co_resultsui))
+accsni <- co_resultsui$overall["Accuracy"]
+accsni
 ```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
 
 ```
 #Clustring
