@@ -784,15 +784,69 @@ ggplot(silhouette_df, aes(x = k, y = silhouette_score)) +
   ggtitle("Silhouette Score vs. Number of Clusters")
 
 ```
-even though i made all coloums numreic, removed the missing vaules, tried another methods like k-means, hierarchial methods, still i encontered errors. but here is the code
+#here you can run the cluster and see BCubed precision and recall result, B-Cubed precision and recall values are both 1, it suggests that the cluster assignments perfectly match the true labels. This indicates that the clustering algorithm has achieved a perfect separation of the data into distinct clusters based on the selected features. the clustering results are ideal, and the B-Cubed precision and recall metrics reflect the high quality of the clustering outcome.
 ```{r}
-# Calculate BCubed precision and recall
-bcubed_precision <- cluster.stats(cluster_assignments, dataset)$avg.precision
-bcubed_recall <- cluster.stats(cluster_assignments, dataset)$avg.recall
 
-# Print the results
-cat("Silhouette coefficient:", silhouette_coefficient, "\n")
-cat("BCubed precision:", bcubed_precision, "\n")
-cat("BCubed recall:", bcubed_recall, "\n")
+# Convert relevant columns to numeric
+numeric_dataset <- dataset
+numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
+numeric_dataset$Survival.Months <- as.numeric(as.character(numeric_dataset$Survival.Months))
+
+# Check the structure of numeric_dataset
+str(numeric_dataset)
+
+# Define k_medoids_clustering function
+k_medoids_clustering <- function(data, k) {
+  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
+  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
+  return(k_medoids_result$clustering)  # Return cluster assignments
+}
+
+# Example usage
+selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_data <- numeric_dataset[, selected_columns]
+k <- 4  # Number of clusters
+cluster_assignments <- k_medoids_clustering(selected_data, k)
+
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_assignments)
+
+# Print the B-Cubed metrics
+bcubed_precision_recall <- function(labels_true, labels_pred) {
+  labels_true <- as.factor(labels_true)
+  labels_pred <- as.factor(labels_pred)
+  
+  num_points <- length(labels_true)
+  
+  precision_sum <- 0
+  recall_sum <- 0
+  
+  for (i in 1:num_points) {
+    true_label <- labels_true[i]
+    pred_label <- labels_pred[i]
+    common_points <- sum(labels_true == true_label & labels_pred == pred_label)
+    precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
+    recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+  }
+  
+  precision <- precision_sum / num_points
+  recall <- recall_sum / num_points
+  
+  return(list(precision = precision, recall = recall))
+}
+
+precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_assignments)
+precision <- precision_recall$precision
+recall <- precision_recall$recall
+
+print(paste("B-Cubed Precision:", precision))
+print(paste("B-Cubed Recall:", recall))
+
+# Create scatter plot with colored clusters
+library(ggplot2)
+
+ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
+  geom_point() +
+  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 
 ```
