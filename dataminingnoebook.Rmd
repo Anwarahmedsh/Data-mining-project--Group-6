@@ -586,7 +586,7 @@ distributed. I chose the attributes survival months and age after trying multipl
 The resulting plot displays a scatter plot where each data point is represented as a point on the plot. The points are colored based on their assigned cluster, allowing for visual exploration of the clustering results. The plot title and axis labels provide additional context for interpreting the plot, this plot shows 4 clusters for this dataset and is chosen as the optimal k number
 
 #Clustr of size=4
-#this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
+#this number was chosen after applying the elbow method which shows that 4 is the optimal number for clustring
 ```{r}
 #Converting interger&factor columns to numeric SO we can perform k-means
 numeric_dataset = dataset
