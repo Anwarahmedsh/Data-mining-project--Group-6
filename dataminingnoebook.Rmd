@@ -786,7 +786,6 @@ ggplot(silhouette_df, aes(x = k, y = silhouette_score)) +
 ```
 #here you can run the cluster and see BCubed precision and recall result thet we performed on the clustering method with k=4, B-Cubed precision and recall values are both 1, it suggests that the cluster assignments perfectly match the true labels. This indicates that the clustering algorithm has achieved a perfect separation of the data into distinct clusters based on the selected features. the clustering results are ideal, and the B-Cubed precision and recall metrics reflect the high quality of the clustering outcome.
 ```{r}
-
 # Convert relevant columns to numeric
 numeric_dataset <- dataset
 numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
@@ -803,30 +802,39 @@ k_medoids_clustering <- function(data, k) {
 }
 
 # Example usage
-selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
 selected_data <- numeric_dataset[, selected_columns]
 k <- 4  # Number of clusters
 cluster_assignments <- k_medoids_clustering(selected_data, k)
 
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
+# Convert cluster assignments to integer codes
+cluster_codes <- as.integer(cluster_assignments)
 
-# Print the B-Cubed metrics
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_codes)
+
+# Corrected B-Cubed metrics calculation
 bcubed_precision_recall <- function(labels_true, labels_pred) {
   labels_true <- as.factor(labels_true)
   labels_pred <- as.factor(labels_pred)
   
+  unique_labels <- unique(labels_true)
   num_points <- length(labels_true)
   
   precision_sum <- 0
   recall_sum <- 0
   
-  for (i in 1:num_points) {
-    true_label <- labels_true[i]
-    pred_label <- labels_pred[i]
-    common_points <- sum(labels_true == true_label & labels_pred == pred_label)
-    precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
-    recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+  for (true_label in unique_labels) {
+    true_indices <- labels_true == true_label
+    pred_labels <- labels_pred[true_indices]
+    
+    unique_pred_labels <- unique(pred_labels)
+    
+    for (pred_label in unique_pred_labels) {
+      common_points <- sum(pred_labels == pred_label)
+      precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
+      recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+    }
   }
   
   precision <- precision_sum / num_points
@@ -835,12 +843,25 @@ bcubed_precision_recall <- function(labels_true, labels_pred) {
   return(list(precision = precision, recall = recall))
 }
 
-precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_assignments)
+precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_codes)
 precision <- precision_recall$precision
 recall <- precision_recall$recall
 
 print(paste("B-Cubed Precision:", precision))
 print(paste("B-Cubed Recall:", recall))
+
+# Convert cluster assignments to integer codes
+cluster_codes <- as.integer(cluster_codes)
+
+# Calculate dissimilarity matrix with integer row names
+diss_matrix <- as.dist(dist(selected_data))
+rownames(diss_matrix) <- as.integer(rownames(diss_matrix))
+
+# Calculate Silhouette score
+silhouette_avg <- silhouette(diss_matrix, cluster_codes)$avg.width
+
+# Print the average Silhouette score
+print(paste("Average Silhouette:", silhouette_avg))
 
 # Create scatter plot with colored clusters
 library(ggplot2)
@@ -848,12 +869,13 @@ library(ggplot2)
 ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   geom_point() +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+
+
 
 ```
 
 #here you can run the cluster with k=5 and see its graph and b-cubed results
 ```{r}
-
 # Convert relevant columns to numeric
 numeric_dataset <- dataset
 numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
@@ -870,30 +892,39 @@ k_medoids_clustering <- function(data, k) {
 }
 
 # Example usage
-selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
 selected_data <- numeric_dataset[, selected_columns]
 k <- 5  # Number of clusters
 cluster_assignments <- k_medoids_clustering(selected_data, k)
 
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
+# Convert cluster assignments to integer codes
+cluster_codes <- as.integer(cluster_assignments)
 
-# Print the B-Cubed metrics
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_codes)
+
+# Corrected B-Cubed metrics calculation
 bcubed_precision_recall <- function(labels_true, labels_pred) {
   labels_true <- as.factor(labels_true)
   labels_pred <- as.factor(labels_pred)
   
+  unique_labels <- unique(labels_true)
   num_points <- length(labels_true)
   
   precision_sum <- 0
   recall_sum <- 0
   
-  for (i in 1:num_points) {
-    true_label <- labels_true[i]
-    pred_label <- labels_pred[i]
-    common_points <- sum(labels_true == true_label & labels_pred == pred_label)
-    precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
-    recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+  for (true_label in unique_labels) {
+    true_indices <- labels_true == true_label
+    pred_labels <- labels_pred[true_indices]
+    
+    unique_pred_labels <- unique(pred_labels)
+    
+    for (pred_label in unique_pred_labels) {
+      common_points <- sum(pred_labels == pred_label)
+      precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
+      recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+    }
   }
   
   precision <- precision_sum / num_points
@@ -902,12 +933,25 @@ bcubed_precision_recall <- function(labels_true, labels_pred) {
   return(list(precision = precision, recall = recall))
 }
 
-precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_assignments)
+precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_codes)
 precision <- precision_recall$precision
 recall <- precision_recall$recall
 
 print(paste("B-Cubed Precision:", precision))
 print(paste("B-Cubed Recall:", recall))
+
+# Convert cluster assignments to integer codes
+cluster_codes <- as.integer(cluster_codes)
+
+# Calculate dissimilarity matrix with integer row names
+diss_matrix <- as.dist(dist(selected_data))
+rownames(diss_matrix) <- as.integer(rownames(diss_matrix))
+
+# Calculate Silhouette score
+silhouette_avg <- silhouette(diss_matrix, cluster_codes)$avg.width
+
+# Print the average Silhouette score
+print(paste("Average Silhouette:", silhouette_avg))
 
 # Create scatter plot with colored clusters
 library(ggplot2)
@@ -915,12 +959,14 @@ library(ggplot2)
 ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   geom_point() +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+
+  
+
 
 ```
 
 #here you can run the cluster with k=6 and see its graph and b-cubed results
 ```{r}
-
 # Convert relevant columns to numeric
 numeric_dataset <- dataset
 numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
@@ -937,30 +983,39 @@ k_medoids_clustering <- function(data, k) {
 }
 
 # Example usage
-selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
 selected_data <- numeric_dataset[, selected_columns]
-k <- 6 # Number of clusters
+k <- 6  # Number of clusters
 cluster_assignments <- k_medoids_clustering(selected_data, k)
 
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
+# Convert cluster assignments to integer codes
+cluster_codes <- as.integer(cluster_assignments)
 
-# Print the B-Cubed metrics
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_codes)
+
+# Corrected B-Cubed metrics calculation
 bcubed_precision_recall <- function(labels_true, labels_pred) {
   labels_true <- as.factor(labels_true)
   labels_pred <- as.factor(labels_pred)
   
+  unique_labels <- unique(labels_true)
   num_points <- length(labels_true)
   
   precision_sum <- 0
   recall_sum <- 0
   
-  for (i in 1:num_points) {
-    true_label <- labels_true[i]
-    pred_label <- labels_pred[i]
-    common_points <- sum(labels_true == true_label & labels_pred == pred_label)
-    precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
-    recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+  for (true_label in unique_labels) {
+    true_indices <- labels_true == true_label
+    pred_labels <- labels_pred[true_indices]
+    
+    unique_pred_labels <- unique(pred_labels)
+    
+    for (pred_label in unique_pred_labels) {
+      common_points <- sum(pred_labels == pred_label)
+      precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
+      recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
+    }
   }
   
   precision <- precision_sum / num_points
@@ -969,12 +1024,25 @@ bcubed_precision_recall <- function(labels_true, labels_pred) {
   return(list(precision = precision, recall = recall))
 }
 
-precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_assignments)
+precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_codes)
 precision <- precision_recall$precision
 recall <- precision_recall$recall
 
 print(paste("B-Cubed Precision:", precision))
 print(paste("B-Cubed Recall:", recall))
+
+# Convert cluster assignments to integer codes
+cluster_codes <- as.integer(cluster_codes)
+
+# Calculate dissimilarity matrix with integer row names
+diss_matrix <- as.dist(dist(selected_data))
+rownames(diss_matrix) <- as.integer(rownames(diss_matrix))
+
+# Calculate Silhouette score
+silhouette_avg <- silhouette(diss_matrix, cluster_codes)$avg.width
+
+# Print the average Silhouette score
+print(paste("Average Silhouette:", silhouette_avg))
 
 # Create scatter plot with colored clusters
 library(ggplot2)
@@ -982,5 +1050,7 @@ library(ggplot2)
 ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   geom_point() +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+
+
 
 ```
