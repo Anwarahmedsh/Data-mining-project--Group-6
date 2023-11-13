@@ -700,10 +700,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
   geom_point() +
   labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 ```
-
-
-
-#here we evaluated the cluster, by determining the number of clusters we can control the proper granularity of cluster analysis
+#here we evaluated the cluster, by determining the number of clusters we can control the proper granularity of cluster analysis, also choosing the optimal number of clusters can help represinying the data in the best way possible 
 
 ```{r}
 library(cluster)
