@@ -529,10 +529,6 @@ precision(as.table(co_resultsui))
 accsni <- co_resultsui$overall["Accuracy"]
 accsni
 ```
-
-
-```
-
 #Clustring
 #Clustr of size=4
 #this number was chosen after applying the elbow method which shows that 5 is the optimal number for clustring
