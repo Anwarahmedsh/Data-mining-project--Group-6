@@ -244,6 +244,59 @@ plot(rfe_result)
 ```
 #Clustring
 ```{r}
+#Converting interger&factor columns to numeric SO we can perform k-means
+numeric_dataset = dataset
+numeric_dataset$Age = as.numeric(as.character(dataset$Age))
+numeric_dataset$Race = as.numeric(as.character(dataset$Race))
+numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
+numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
+numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
+numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
+numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
+numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
+numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
+numeric_dataset$Tumor.Size = as.numeric(as.character(dataset$Tumor.Size))
+numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
+numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
+numeric_dataset$Regional.Node.Examined = as.numeric(as.character(dataset$Regional.Node.Examined))
+numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.Node.Positive))
+numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
+numeric_dataset$Status = as.numeric(as.character(dataset$Status))
+str(numeric_dataset)
+
+
+library(cluster)
+library(ggplot2)
+# Assuming 'data' is your object
+if (class(data) == "data.frame") {
+  # Your code for subsetting columns here
+} else {
+  # Handle the case where 'data' is not a data frame
+  print("The 'data' object is not a data frame.")
+}
+
+k_medoids_clustering <- function(data, k) {
+  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
+  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
+  return(k_medoids_result$clustering)  # Return cluster assignments
+}
+# Example usage
+selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
+selected_data <- numeric_dataset[, selected_columns]
+k <- 4 # Number of clusters
+cluster_assignments <- k_medoids_clustering(selected_data, k)
+
+# Add cluster assignments to the selected data
+selected_data$Cluster <- as.factor(cluster_assignments)
+
+
+# Create scatter plot with colored clusters
+ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
+  geom_point() +
+  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+
+
+
 library(cluster)
 library(ggplot2)
 
@@ -252,17 +305,49 @@ k_medoids_clustering <- function(data, k) {
   k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
   return(k_medoids_result$clustering)  # Return cluster assignments
 }
+
 # Example usage
-selected_columns <- c("Age", "Survival.Months")  # Select relevant columns
-selected_data <- data[, selected_columns]
-k <- 3  # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
+selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
+selected_data <- numeric_dataset[, selected_columns]
+max_k <- 10  # Maximum number of clusters to consider
 
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
+wss_values <- vector("numeric", max_k)  # Empty vector to store WSS values
 
-# Create scatter plot with colored clusters
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
+for (k in 1:max_k) {
+  cluster_assignments <- k_medoids_clustering(selected_data, k)  # Perform k-medoids clustering
+  wss <- 0  # Initialize within-cluster sum of squares (WSS) value
+  
+  # Calculate WSS for the current k
+  for (i in 1:k) {
+    cluster_points <- selected_data[cluster_assignments == i, , drop = FALSE]
+    
+    # Calculate medoid as the observation with minimum average dissimilarity
+    cluster_distances <- proxy::dist(cluster_points)
+    avg_dissimilarity <- rowMeans(as.matrix(cluster_distances))
+    medoid_index <- which.min(avg_dissimilarity)
+    medoid <- cluster_points[medoid_index, ]
+    
+    cluster_distances <- proxy::dist(rbind(cluster_points, medoid))
+    wss <- wss + sum(cluster_distances[1:nrow(cluster_points)])
+  }
+  
+  wss_values[k] <- wss  # Store WSS value
+}
+
+# Plot WSS values against k values
+elbow_plot <- ggplot() +
+  geom_line(aes(x = 1:max_k, y = wss_values)) +
+  geom_point(aes(x = 1:max_k, y = wss_values)) +
+  labs(title = "Elbow Method", x = "Number of Clusters (k)", y = "Within-Cluster Sum of Squares (WSS)")
+
+print(elbow_plot)
+
+
+# Plot Silhouette values against k values
+silhouette_plot <- ggplot() +
+  geom_line(aes(x = 2:max_k, y = silhouette_values[2:max_k])) +
+  geom_point(aes(x = 2:max_k, y = silhouette_values[2:max_k])) +
+  labs(title = "Silhouette Coefficient", x = "Number of Clusters (k)", y = "Silhouette Coefficient")
+
+print(silhouette_plot)
 ```
