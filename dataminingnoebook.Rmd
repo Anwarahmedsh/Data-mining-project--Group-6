@@ -140,6 +140,7 @@ dataset = dataset[dataset$Survival.Months != outmonth ,]
 nrow(dataset)
 ```
 #checking if there is any missing value or duplicated rows 
+```{r}
 is.na(dataset)
 sum(is.na(dataset))
 sum(duplicated(dataset))
@@ -149,8 +150,10 @@ sum(duplicated(dataset))
 #number of rows after deleting dup
 nrow(dataset)
 nrow(dataset)
+```
 
 #Normalization:
+```{r}
 #Define function normalize
 normalize <- function(x) {return ((x - min(x)) / (max(x) - min(x)))}
 
@@ -164,7 +167,9 @@ dataset$Survival.Months<-normalize(dataset$Survival.Months)
 
 #showing normalized columns
 print(dataset)
+```
 
+```{r}
 #encoding
 dataset$Race = factor(dataset$Race,levels = c("White","Black", "Other"), labels=c(1,2,3))
 dataset$Marital.Status = factor(dataset$Marital.Status,levels = c("Married","Divorced","Separated","Single ","Widowed"), labels=c(1,2,3,4,5))
@@ -176,7 +181,7 @@ dataset$Progesterone.Status = factor(dataset$Progesterone.Status ,levels = c("Ne
 dataset$A.Stage	 = factor(dataset$A.Stage	,levels = c("Regional","Distant"), labels=c(0,1))
 dataset$T.Stage	 = factor(dataset$T.Stage	,levels = c("T1","T2","T3","T4"), labels=c(1,2,3,4))
 dataset$N.Stage	 = factor(dataset$N.Stage	,levels = c("N1","N2","N3"), labels=c(1,2,3))
-
+```
 is.na(dataset)
 sum(is.na(dataset))
 
