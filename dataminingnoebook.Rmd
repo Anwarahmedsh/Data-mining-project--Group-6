@@ -182,10 +182,13 @@ dataset$A.Stage	 = factor(dataset$A.Stage	,levels = c("Regional","Distant"), lab
 dataset$T.Stage	 = factor(dataset$T.Stage	,levels = c("T1","T2","T3","T4"), labels=c(1,2,3,4))
 dataset$N.Stage	 = factor(dataset$N.Stage	,levels = c("N1","N2","N3"), labels=c(1,2,3))
 ```
+```{r}
 is.na(dataset)
 sum(is.na(dataset))
+```
 
-#feature selection
+#the chi-square
+```{r}
 # Get the column names of the dataset
 column_names <- colnames(dataset)
 
@@ -204,6 +207,7 @@ for (attribute in column_names) {
     cat("\n")
   }
 }
+```
 #the chi-square test results indicate that most of the attributes have a significant association with the variable being tested. These attributes include Age, Race, Marital.Status, T.Stage, N.Stage, X6th.Stage, differentiate, Grade, A.Stage, Estrogen.Status, Progesterone.Status, Regional.Node.Examined, Reginol.Node.Positive, Tumor.Size, Survival.Months, and Status. The low p-values provide strong evidence to reject the null hypothesis of no association between these attributes and the variable.
 #Since they are highly correlated there is no need to perform feature selection
 
@@ -211,9 +215,10 @@ for (attribute in column_names) {
 
 
 
-
+#feature selection
 #other way to choose the relevant attributes to the dataset, we performed this feature selection if you want to check it out, although we think the chi square is better
 # ensure the results are repeatable
+```{r}
 set.seed(7)
 # load the library
 library(mlbench)
@@ -233,6 +238,7 @@ rfe_result <- rfe(features, target, sizes = 1:ncol(features), rfeControl = ctrl)
 # Print the RFE result
 print(rfe_result)
 plot(rfe_result)
+```
 #This feature selection graphical representation shows the higher-ranked features that considered more important or relevant for predicting the target variable which are: Survival.Months, Reginol.Node.Positive, X6th.Stage, Progesterone. Status, Age.,this helps choosing which features to include or exclude . so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand.
 
 #Classification
