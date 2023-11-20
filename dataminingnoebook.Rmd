@@ -139,7 +139,7 @@ dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
 dataset = dataset[dataset$Survival.Months != outmonth ,]
 nrow(dataset)
 ```
-#checking if there is any missing value or duplicated rows 
+#checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process,
 ```{r}
 is.na(dataset)
 sum(is.na(dataset))
