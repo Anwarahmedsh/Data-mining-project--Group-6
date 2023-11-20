@@ -5,7 +5,6 @@ output:
     df_print: paged
 ---
 
-
 #importing dataset
 ```{r}
 setwd("C:/Users/saran/OneDrive")
@@ -15,6 +14,51 @@ library(Hmisc)
 describe(dataset)
 summary(dataset)
 ```
+
+# Dataset Description
+
+# THE GOAL :
+
+The Breast Cancer Survival Rate Prediction Model aims to develop a machine learning-based model that can accurately estimate the survival rate of breast cancer patients. By analyzing patient data such as tumor size, tumor grade and other clinical information, and patient age, martial status, race. this model can assist doctors in early intervention, personalized treatment, improved patient counseling, research advancements, resource allocation, and continuous improvement in breast cancer care.
+
+the Prediction Model is developed using two techniques: 
+1- Classification:
+Classification algorithms are specifically designed to predict survival status of breast cancer patients.
+2-Clustering 
+Clustering algorithms can be used to identify groups of breast cancer patients based on similarities in their data. This helps in understanding different subtypes or risk groups within the patient population.
+
+
+# The source of the dataset
+from kaggle website , URL:
+https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
+
+
+# General Information 
+
+- Number of attributes : 16
+- Number of objects : 4025 
+- The class name : survival months.
+- Types of attribute :
+| Attribute name | Description | Data type |Possible values |
+|----------------|--------------|---------------|-----------|
+| Age | age of the patients | numeric| between 30 - 70 |
+| Race | classification of people based on their physical characteristics such as skin color | nominal | white, black or other|
+| Marital status | refers to wether the patient is married ,single or divorced etc | nominal | Divorced ,Married, Separated,    Single , Widowed|
+| T stage | describe the tumors size and if it has spread to the skin or to the chest wall under the breast. Higher T numbers mean a larger tumor | ordinal | T1,T2,T3,T4|
+| N stage | indicates whether the cancer has spread to lymph nodes near the breast | ordinal |N1 ,N2,N3|
+| 6th stage | describes invasive breast cancer | Ordinal |IIA ,  IIB , IIIA , IIIB , IIIC|
+| Differentiation |describes how well developed the tumour cells are and how cancer cells are organised in the tumour tissue | ordinal |  Moderately differentiated  , Poorly differentiated       ,Undifferentiated  , Well differentiated|
+| Grade | depends on what the cells look like, lower grade indicates slower-growing cancer unlike higher grades | ordinal | 1,2 ,3, 4|
+| A stage | Regional : aneoplasm that has extended, Distant : aneoplasm that has spread to parts of the body remote from | asymmetric binary | Distant, Regional|
+| Tumor size | Each indicates exact size of the tumor in millimeters  | ordinal |FROM 1 TO 140 |
+| Estrogen status | The cancer is estrogen receptor-positive if it has receptors for estrogen  | asymmetric binary |Negative, Positive|
+| Progesterone status | The cancer is progesterone receptor-positive if it has progesterone receptors. | asymmetric binary |Negative , Positive|
+| Regional Node Examined | the number of the regional node that have been examined |numeric  | FROM 1 TO 61|
+| Reginol Node Positive | the number of the regional node that heve been confirmed to have cancer |numeric | FROM 1 TO 46|
+| Survival Months | It predicts the number of months to live based on the patient state | numeric | FROM 1 TO 107|
+| Status |  describes weather the patient is dead or alive | asymmetric binary | Dead , alive |
+
+
 #histogram for ages
 ```{r}
 hist(dataset$Age)
@@ -37,19 +81,23 @@ pie(tab, labels = txt, main= 'Race')
 #Scatter Plot
 ```{r}
 with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
-#This scatter plot has no correlation although we can see that when the tumor size is small the human is more likely to live more months which make sense
+#This scatter plot has no correlation although we can see that when the tumor size is small the women is more likely to live more months which make sense
 ```
 
 
 
 
-#changing the value IV in Grade attribute
+#changing the value IV in Grade attribute, so we can work with it easliy
 ```{r}
 dataset$Grade[dataset$Grade == ' anaplastic; Grade IV' ] = 4 
 table(dataset$Grade)
 ```
-#install.packages("outliers")
+
+#detecting outliers is crucial for data integrity, accurate analysis, model performance, and gaining a comprehensive understanding of the data. It helps identify potential data issues,also its important to detect it before starting the data preprocessing step since it can ensure that preprocessing steps are applied appropriately and that the resulting data is suitable
+
+#here we identify outliers and analyz their occurrences for specific variables of the dataset.
 ```{r}
+#install.packages("outliers")
 library(outliers)
 #outliers of age
 outage= outlier(dataset$Age)
