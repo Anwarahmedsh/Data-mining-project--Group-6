@@ -37,7 +37,7 @@ https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 
 - Number of attributes : 16
 - Number of objects : 4025 
-- The class name : survival months.
+- The class name : status.
 - Types of attribute :
 | Attribute name | Description | Data type |Possible values |
 |----------------|--------------|---------------|-----------|
