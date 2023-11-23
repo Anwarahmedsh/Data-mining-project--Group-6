@@ -15,9 +15,8 @@ describe(dataset)
 summary(dataset)
 ```
 # problem 
-Breast cancer, a leading cause of global cancer-related deaths, presents a challenge in tailoring treatments due to its heterogeneity in nature, but homogeneity in treatment due to the fact that the current treatment landscape often lacks personalized approaches, primarily because of a limited emphasis on prognosis assessment. This oversight becomes glaringly evident in the observed survival rate disparities, such as the approximate 90% survival rate for caucasian women compared to the 80% rate for African American women.
+#Breast cancer, a leading cause of global cancer-related deaths, presents a challenge in tailoring treatments due to its heterogeneity in nature, but homogeneity in treatment due to the fact that the current treatment landscape often lacks personalized approaches, primarily because of a limited emphasis on prognosis assessment. This oversight becomes glaringly evident in the observed survival rate disparities, such as the approximate 90% survival rate for caucasian women compared to the 80% rate for African American women.
 By focusing on prognosis, we aim to bridge the gap in treatment personalization and resource allocation. This is not merely a statistical concern but a pressing matter of healthcare equity and the optimal utilization of resources.
-
 The goal of this project is to develop a machine learning model that goes beyond traditional diagnostic approaches and provides a nuanced understanding of individual patient prognosis. By identifying factors contributing to higher risk of death, we aspire to enhance treatment personalization, ensuring that resources are allocated more efficiently to patients who are at a greater risk. This approach not only addresses the disparities in survival rates among different demographic groups but also contributes to a more equitable and effective breast cancer treatment landscape on a global scale.
 
 # Data Mining Task :
