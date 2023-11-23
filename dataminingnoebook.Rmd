@@ -21,10 +21,12 @@ summary(dataset)
 
 
 
-
+#Data
 # The source of the dataset
-from kaggle website , URL:
+#obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL:
 https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
+
+
 
 # Dataset Description
 # General Information 
