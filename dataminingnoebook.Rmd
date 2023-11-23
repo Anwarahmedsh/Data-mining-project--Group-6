@@ -17,15 +17,9 @@ summary(dataset)
 # problem 
 
 
-# THE GOAL :
+# Data Mining Task :
 
-The Breast Cancer Survival Rate Prediction Model aims to develop a machine learning-based model that can accurately estimate the survival rate of breast cancer patients. By analyzing patient data such as tumor size, tumor grade and other clinical information, and patient age, martial status, race. this model can assist doctors in early intervention, personalized treatment, improved patient counseling, research advancements, resource allocation, and continuous improvement in breast cancer care.
 
-the Prediction Model is developed using two techniques: 
-1- Classification:
-Classification algorithms are specifically designed to predict survival status of breast cancer patients.
-2-Clustering 
-Clustering algorithms can be used to identify groups of breast cancer patients based on similarities in their data. This helps in understanding different subtypes or risk groups within the patient population.
 
 
 # The source of the dataset
