@@ -76,6 +76,27 @@ var(dataset$Reginol.Node.Positive)
 var(dataset$Survival.Months)
 var(dataset$Age)
 ```
+# We have investigated missing values and outliers as they are crucial in analyzing any dataset.
+
+
+# checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process,
+```{r}
+is.na(dataset)
+sum(is.na(dataset))
+sum(duplicated(dataset))
+#removing duplicate
+dataset= unique(dataset)
+sum(duplicated(dataset))
+#number of rows after deleting dup
+nrow(dataset)
+nrow(dataset)
+```
+
+
+
+
+
+
 
 # we have represented the dataset in the following graphs to provide better understanding:
 
@@ -153,18 +174,6 @@ dataset = dataset[dataset$Tumor.Size != outTumorSize ,]
 dataset = dataset[dataset$Regional.Node.Examined != outNodeExamined ,]
 dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
 dataset = dataset[dataset$Survival.Months != outmonth ,]
-nrow(dataset)
-```
-#checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process,
-```{r}
-is.na(dataset)
-sum(is.na(dataset))
-sum(duplicated(dataset))
-#removing duplicate
-dataset= unique(dataset)
-sum(duplicated(dataset))
-#number of rows after deleting dup
-nrow(dataset)
 nrow(dataset)
 ```
 
