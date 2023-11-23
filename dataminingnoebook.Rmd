@@ -93,14 +93,14 @@ precentages = tab %>% prop.table() %>% round(3)*100
 txt = paste0(names(tab), '\n', precentages, '%')
 pie(tab, labels = txt, main= 'Race')
 ```
-# we can see the race is divided into three sections with their percentage ( as our dataset shows we have white, black , other). The pie chart shows which is the most Race diagnosed with breast cancer.
-as illustrated, the white race is the highest diagnosed race with 84.8% rate
+# we can see the race is divided into three sections with their percentage ( as our dataset shows we have white, black , other). The pie chart shows which is the most Race diagnosed with breast cancer. as illustrated, the white race is the highest diagnosed race with 84.8% rate
 
 
 #Scatter Plot
 ```{r}
 with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
-# This scatter plot shows that when the tumor size is small the women is more likely to live more months 
+```
+# This scatter plot shows the collarition between the tumor size attribute and the Survival months attribute, as when the tumor size is small the survival months is high which indicates that when the tumor size is small the women is more likely to live more months 
 
 
 #changing the value IV in Grade attribute, so we can work with it easliy
