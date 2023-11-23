@@ -15,26 +15,26 @@ describe(dataset)
 summary(dataset)
 ```
 # problem 
-#Breast cancer, a leading cause of global cancer-related deaths, presents a challenge in tailoring treatments due to its heterogeneity in nature, but homogeneity in treatment due to the fact that the current treatment landscape often lacks personalized approaches, primarily because of a limited emphasis on prognosis assessment. This oversight becomes glaringly evident in the observed survival rate disparities, such as the approximate 90% survival rate for caucasian women compared to the 80% rate for African American women.
+# Breast cancer, a leading cause of global cancer-related deaths, presents a challenge in tailoring treatments due to its heterogeneity in nature, but homogeneity in treatment due to the fact that the current treatment landscape often lacks personalized approaches, primarily because of a limited emphasis on prognosis assessment. This oversight becomes glaringly evident in the observed survival rate disparities, such as the approximate 90% survival rate for caucasian women compared to the 80% rate for African American women.
 By focusing on prognosis, we aim to bridge the gap in treatment personalization and resource allocation. This is not merely a statistical concern but a pressing matter of healthcare equity and the optimal utilization of resources.
 The goal of this project is to develop a machine learning model that goes beyond traditional diagnostic approaches and provides a nuanced understanding of individual patient prognosis. By identifying factors contributing to higher risk of death, we aspire to enhance treatment personalization, ensuring that resources are allocated more efficiently to patients who are at a greater risk. This approach not only addresses the disparities in survival rates among different demographic groups but also contributes to a more equitable and effective breast cancer treatment landscape on a global scale.
 
 # Data Mining Task :
-#Data Mining Tasks: Classification and Clustering
+# Data Mining Tasks: Classification and Clustering
 
-#This project involves two primary data mining tasks: classification and clustering, each contributing to the overarching goal of helping healthcare professionals to make informed decision, and enhancing treatment plans, improved counseling, and resource allocation towards patients who have a higher risk of death.
+# This project involves two primary data mining tasks: classification and clustering, each contributing to the overarching goal of helping healthcare professionals to make informed decision, and enhancing treatment plans, improved counseling, and resource allocation towards patients who have a higher risk of death.
 
-#1. Classification:
+# 1. Classification:
 #Class Attribute: The class attribute for the classification task is the "patient status," which is binary and categorized as either "alive" or "dead."
 
-#Goal: The classification model can be used to predict whether a patient's status will be "alive" or dead". This will serve as a valuable tool for healthcare professionals to make informed decision regarding patient careuch as early intervention strategies , since these predictions can be used to identify risk factors for breast cancer death, which could result in developing more optimized strategies and treatments.
+# Goal: The classification model can be used to predict whether a patient's status will be "alive" or dead". This will serve as a valuable tool for healthcare professionals to make informed decision regarding patient careuch as early intervention strategies , since these predictions can be used to identify risk factors for breast cancer death, which could result in developing more optimized strategies and treatments.
 
-#2. Clustering:
+# 2. Clustering:
 #Goal:  the clustering task aims to uncover patterns and subgroups within the patient population based on shared characteristics Utilizing clinical data such as T-Stage, age, and N-Stage. This enables a more nuanced understanding of the heterogeneity of breast cancer, facilitating the identification of specific patient profiles that may have similar prognostic implications.
 
 # Data
 # The source of the dataset
-#obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL:
+# obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL:
 https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 
 # Dataset Description
