@@ -32,24 +32,10 @@ The goal of this project is to develop a machine learning model that goes beyond
 #2. Clustering:
 #Goal:  the clustering task aims to uncover patterns and subgroups within the patient population based on shared characteristics Utilizing clinical data such as T-Stage, age, and N-Stage. This enables a more nuanced understanding of the heterogeneity of breast cancer, facilitating the identification of specific patient profiles that may have similar prognostic implications.
 
-
-
-
-
-
-
-
-
-
-
-
-
-#Data
+# Data
 # The source of the dataset
 #obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL:
 https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
-
-
 
 # Dataset Description
 # General Information 
@@ -94,16 +80,11 @@ pie(tab, labels = txt, main= 'Race')
 ```
 #The pie chat divided the races into three sections with their percentage ( as our dataset shows we have white, black , other). As we see, the white race preset the highest percentage ( 84.8%).
 
-
-
-
 #Scatter Plot
 ```{r}
 with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
 #This scatter plot has no correlation although we can see that when the tumor size is small the women is more likely to live more months which make sense
 ```
-
-
 
 
 #changing the value IV in Grade attribute, so we can work with it easliy
