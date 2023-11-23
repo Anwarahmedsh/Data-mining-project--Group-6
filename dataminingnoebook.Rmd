@@ -14,8 +14,8 @@ library(Hmisc)
 describe(dataset)
 summary(dataset)
 ```
+# problem 
 
-# Dataset Description
 
 # THE GOAL :
 
@@ -32,7 +32,7 @@ Clustering algorithms can be used to identify groups of breast cancer patients b
 from kaggle website , URL:
 https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 
-
+# Dataset Description
 # General Information 
 
 - Number of attributes : 16
