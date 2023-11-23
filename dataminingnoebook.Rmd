@@ -64,13 +64,28 @@ https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 | Status |  describes weather the patient is dead or alive | asymmetric binary | Dead , alive |
 
 
-#histogram for ages
+# Moving forward, we applied some statistical measures on the dataset to better understand them. The following code show the process:
+
+#statistical summaries
+```{r}
+summary(dataset)
+var(dataset)
+var(dataset$Tumor.Size)
+var(dataset$Regional.Node.Examined)
+var(dataset$Reginol.Node.Positive)
+var(dataset$Survival.Months)
+var(dataset$Age)
+```
+
+# we have represented the dataset in the following graphs to provide better understanding:
+
+# histogram for Age attribute
 ```{r}
 hist(dataset$Age)
 ```
-#A histogram showing the age distribution of women diagnosed with breast cancer. The histogram shows that breast cancer is more common among women whose ages range from 45 t0 50 years(highest frequency).
+# A histogram showing the age distribution of women diagnosed with breast cancer. We conclude that breast cancer is more common among women whose ages range from 45 to 50 years (highest frequency).
 
-#pie chart for race
+# pie chart for Race attribute
 ```{r}
 library(dplyr)
 tab = dataset$Race %>% table()
@@ -78,13 +93,14 @@ precentages = tab %>% prop.table() %>% round(3)*100
 txt = paste0(names(tab), '\n', precentages, '%')
 pie(tab, labels = txt, main= 'Race')
 ```
-#The pie chat divided the races into three sections with their percentage ( as our dataset shows we have white, black , other). As we see, the white race preset the highest percentage ( 84.8%).
+# we can see the race is divided into three sections with their percentage ( as our dataset shows we have white, black , other). The pie chart shows which is the most Race diagnosed with breast cancer.
+as illustrated, the white race is the highest diagnosed race with 84.8% rate
+
 
 #Scatter Plot
 ```{r}
 with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
-#This scatter plot has no correlation although we can see that when the tumor size is small the women is more likely to live more months which make sense
-```
+# This scatter plot shows that when the tumor size is small the women is more likely to live more months 
 
 
 #changing the value IV in Grade attribute, so we can work with it easliy
