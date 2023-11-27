@@ -92,10 +92,51 @@ nrow(dataset)
 nrow(dataset)
 ```
 
+#detecting outliers is crucial for data integrity, accurate analysis, model performance, and gaining a comprehensive understanding of the data. It helps identify potential data issues,also its important to detect it before starting the data preprocessing step since it can ensure that preprocessing steps are applied appropriately and that the resulting data is suitable
 
+#here we identify outliers and analyz their occurrences for specific variables of the dataset, and deleted them
+```{r}
+#install.packages("outliers")
+library(outliers)
+#outliers of age
+outage= outlier(dataset$Age)
+print(outage)
+#number of rows that have the outlier 
+table(dataset$Age == outage )
 
+#outliers of tumor size
+outTumorSize = outlier(dataset$Tumor.Size)
+print(outTumorSize)
+#number of rows that has the outlier
+table(dataset$Tumor.Size == outTumorSize)
 
+#outliers of Regional Node Examined
+outNodeExamined = outlier(dataset$Regional.Node.Examined)
+print(outNodeExamined)
+#number of rows that has the outlier
+table(dataset$Regional.Node.Examined == outNodeExamined )
 
+#outliers of Reginol Node Positive
+outNodepositive = outlier(dataset$Reginol.Node.Positive)
+print(outNodepositive)
+#number of rows that has the outlier
+table(dataset$Reginol.Node.Positive == outNodepositive )
+
+#outliers of Survival Months
+outmonth = outlier(dataset$Survival.Months)
+print(outmonth)
+#number of rows that has the outlier 
+table(dataset$Survival.Months==outmonth)
+```
+```{r}
+#delete the outliers
+dataset = dataset[dataset$Age != outage ,]
+dataset = dataset[dataset$Tumor.Size != outTumorSize ,]
+dataset = dataset[dataset$Regional.Node.Examined != outNodeExamined ,]
+dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
+dataset = dataset[dataset$Survival.Months != outmonth ,]
+nrow(dataset)
+```
 
 
 # we have represented the dataset in the following graphs to provide better understanding:
@@ -130,52 +171,7 @@ dataset$Grade[dataset$Grade == ' anaplastic; Grade IV' ] = 4
 table(dataset$Grade)
 ```
 
-#detecting outliers is crucial for data integrity, accurate analysis, model performance, and gaining a comprehensive understanding of the data. It helps identify potential data issues,also its important to detect it before starting the data preprocessing step since it can ensure that preprocessing steps are applied appropriately and that the resulting data is suitable
 
-#here we identify outliers and analyz their occurrences for specific variables of the dataset.
-```{r}
-#install.packages("outliers")
-library(outliers)
-#outliers of age
-outage= outlier(dataset$Age)
-print(outage)
-#number of rows that have the outlier 
-table(dataset$Age == outage )
-
-#outliers of tumor size
-outTumorSize = outlier(dataset$Tumor.Size)
-print(outTumorSize)
-#number of rows that has the outlier
-table(dataset$Tumor.Size == outTumorSize)
-
-#outliers of Regional Node Examined
-outNodeExamined = outlier(dataset$Regional.Node.Examined)
-print(outNodeExamined)
-#number of rows that has the outlier
-table(dataset$Regional.Node.Examined == outNodeExamined )
-
-#outliers of Reginol Node Positive
-outNodepositive = outlier(dataset$Reginol.Node.Positive)
-print(outNodepositive)
-#number of rows that has the outlier
-table(dataset$Reginol.Node.Positive == outNodepositive )
-
-#outliers of Survival Months
-outmonth = outlier(dataset$Survival.Months)
-print(outmonth)
-#number of rows that has the outlier 
-table(dataset$Survival.Months==outmonth)
-```
-
-```{r}
-#delete the outliers
-dataset = dataset[dataset$Age != outage ,]
-dataset = dataset[dataset$Tumor.Size != outTumorSize ,]
-dataset = dataset[dataset$Regional.Node.Examined != outNodeExamined ,]
-dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
-dataset = dataset[dataset$Survival.Months != outmonth ,]
-nrow(dataset)
-```
 
 #Normalization:
 ```{r}
