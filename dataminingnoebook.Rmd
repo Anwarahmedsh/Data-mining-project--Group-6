@@ -705,7 +705,7 @@ The resulting plot displays a scatter plot where each data point is represented 
 #Clustr of size=4
 #this number was chosen after applying the elbow method which shows that 4 is the optimal number for clustring
 ```{r}
-#Converting interger&factor columns to numeric SO we can perform k-means
+#Converting interger&factor columns to numeric SO we can perform 
 numeric_dataset = dataset
 numeric_dataset$Age = as.numeric(as.character(dataset$Age))
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
@@ -758,7 +758,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 #Clustr of size=5
 #this number was chosen randomlly
 ```{r}
-#Converting interger&factor columns to numeric SO we can perform k-means
+#Converting interger&factor columns to numeric SO we can perform 
 numeric_dataset = dataset
 numeric_dataset$Age = as.numeric(as.character(dataset$Age))
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
@@ -814,7 +814,7 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 #Clustr of size=6
 #this number was chosen after applying Silhouette coefficient which indicate 6 as the optimal k
 ```{r}
-#Converting interger&factor columns to numeric SO we can perform k-means
+#Converting interger&factor columns to numeric SO we can perform 
 numeric_dataset = dataset
 numeric_dataset$Age = as.numeric(as.character(dataset$Age))
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
