@@ -45,7 +45,7 @@ The goal of this project is to develop a machine learning model that goes beyond
 ```{r}
 #Number of rows
 nrow(data)
-#Number of column
+#Number of columns
 ncol(data)
 ```
 - Types of attribute :
