@@ -32,7 +32,7 @@ The goal of this project is to develop a machine learning model that goes beyond
 # 2. Clustering:
 #Goal:  the clustering task aims to uncover patterns and subgroups within the patient population based on shared characteristics Utilizing clinical data such as T-Stage, age, and N-Stage. This enables a more nuanced understanding of the heterogeneity of breast cancer, facilitating the identification of specific patient profiles that may have similar prognostic implications.
 
-# Data
+# Data:
 # The source of the dataset
 # obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL: https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 
@@ -81,25 +81,27 @@ var(dataset$Reginol.Node.Positive)
 var(dataset$Survival.Months)
 var(dataset$Age)
 ```
-# We have investigated missing values and outliers as they are crucial in analyzing any dataset.
 
 
-# checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process,
+# Boxplot
+# here we have a graphic display of the five-number summary and the outliers
 ```{r}
-is.na(dataset)
-sum(is.na(dataset))
-sum(duplicated(dataset))
-#removing duplicate
-dataset= unique(dataset)
-sum(duplicated(dataset))
-#number of rows after deleting dup
-nrow(dataset)
-nrow(dataset)
+# Select the columns that have numercal values
+columns_of_interest <- c("Age", "Tumor.Size", "Regional.Node.Examined", "Reginol.Node.Positive", "Survival.Months")
+data_of_interest <- dataset[, columns_of_interest]
+
+# Create boxplots for each selected attribute
+par(mfrow = c(2, 3))  # Adjust the layout as needed
+
+for (attribute in columns_of_interest) {
+  boxplot(data_of_interest[[attribute]], main = attribute)
+}
 ```
+# as illustrated in the graphs the age attrbuite have no outliers, but the Tumor.Size, Regional.Node.Examined and Reginol.Node.Positive have only Max Outlier meanwhile Survival.Months have only Min Outlier
 
 #detecting outliers is crucial for data integrity, accurate analysis, model performance, and gaining a comprehensive understanding of the data. It helps identify potential data issues,also its important to detect it before starting the data preprocessing step since it can ensure that preprocessing steps are applied appropriately and that the resulting data is suitable
 
-#here we identify outliers and analyz their occurrences for specific variables of the dataset, and deleted them
+#here we analyzed their occurrences for specific variables of the dataset, and deleted them
 ```{r}
 #install.packages("outliers")
 library(outliers)
@@ -170,11 +172,41 @@ with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
 # This scatter plot shows the collarition between the tumor size attribute and the Survival months attribute, as when the tumor size is small the survival months is high which indicates that when the tumor size is small the women is more likely to live more months 
 
 
+
+# Data preprocessing:
+
 #changing the value IV in Grade attribute, so we can work with it easliy
 ```{r}
 dataset$Grade[dataset$Grade == ' anaplastic; Grade IV' ] = 4 
 table(dataset$Grade)
 ```
+
+# We have investigated missing values as they are crucial in analyzing any dataset.
+
+# checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process,
+```{r}
+is.na(dataset)
+sum(is.na(dataset))
+sum(duplicated(dataset))
+#removing duplicate
+dataset= unique(dataset)
+sum(duplicated(dataset))
+#number of rows after deleting dup
+nrow(dataset)
+nrow(dataset)
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
