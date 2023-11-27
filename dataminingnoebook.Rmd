@@ -34,8 +34,7 @@ The goal of this project is to develop a machine learning model that goes beyond
 
 # Data
 # The source of the dataset
-# obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL:
-https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
+# obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL: https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 
 # Dataset Description
 # General Information 
@@ -43,6 +42,12 @@ https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 - Number of attributes : 16
 - Number of objects : 4025 
 - The class name : status.
+```{r}
+#Number of rows
+nrow(data)
+#Number of column
+ncol(data)
+```
 - Types of attribute :
 | Attribute name | Description | Data type |Possible values |
 |----------------|--------------|---------------|-----------|
