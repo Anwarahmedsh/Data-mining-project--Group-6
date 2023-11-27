@@ -169,7 +169,7 @@ pie(tab, labels = txt, main= 'Race')
 ```{r}
 with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
 ```
-# This scatter plot shows the collarition between the tumor size attribute and the Survival months attribute, as when the tumor size is small the survival months is high which indicates that when the tumor size is small the women is more likely to live more months 
+# This scatter plot shows the collarition between the tumor size attribute and the Survival months attribute, as when the tumor size is small the survival months is high which indicates that when the tumor size is small the women is more likely to live more months, also it illustrates there is a lot of outliers in the dataset so we might need to delete them.
 
 
 
