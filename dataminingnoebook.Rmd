@@ -175,15 +175,17 @@ with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
 
 # Data preprocessing:
 
-#changing the value IV in Grade attribute, so we can work with it easliy
-```{r}
-dataset$Grade[dataset$Grade == ' anaplastic; Grade IV' ] = 4 
-table(dataset$Grade)
-```
+In the data preprocessing, we applied various techniques to enhance the dataset's suitability for machine learning models. We did both data cleaning and data transformation.  
+For the data cleaning :
+we have already removed the outliers , we checked if our dataset have duplicated rows and null values or not but it didnt have any. 
+For data transformation: 
+-Normalization was performed on numeric attributes to ensure a consistent scale between 0 and 1.
+-Encoding was performed on categorical variables, converting them into a numeric format, facilitating model training.  
+-Chi-square tests were conducted to evaluate the associations between each categorical attribute and the "Status" variable, revealing significant connections.
+-Correlation analysis generated a matrix for numeric variables, to understand relationships between them.
 
-# We have investigated missing values as they are crucial in analyzing any dataset.
-
-# checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process,
+#Data cleaning codes:
+checking if there is any missing value or duplicated rows, this allow us to identify and handle data quality issues early in the analysis process
 ```{r}
 is.na(dataset)
 sum(is.na(dataset))
@@ -195,37 +197,24 @@ sum(duplicated(dataset))
 nrow(dataset)
 nrow(dataset)
 ```
+we did not have any missing valuse but we have a duplicated row so we deleted it.
 
-
-
-#Preprocessing
-In the data preprocessing, we applied various techniques to enhance the dataset's suitability for machine learning models. We did both data cleaning and data transformation.  
-For the data cleaning :
-we have already removed the outliers , duplicated rows and we checked wether our dataset have null values or not and it didnt have any. 
-For data transformation: 
--Normalization was performed on numeric attributes to ensure a consistent scale between 0 and 1.
--Encoding was performed on categorical variables, converting them into a numeric format, facilitating model training.  
--Chi-square tests were conducted to evaluate the associations between each categorical attribute and the "Status" variable, revealing significant connections.
- -Correlation analysis generated a matrix for numeric variables, to understand relationships between them.
+#Data transformation codes:
 
 #Normalization:
 we had numeric attributes might be measured in different units or have a different range of values (Age, tumor size, Regional Node Examined, Regional Node Positive, Survival months). so we applied Normalization to adjust the quantities of each attribute so that they all fit into the same scale and they all have values between 0 and 1.
 ```{r}
 #Define function normalize
 normalize <- function(x) {return ((x - min(x)) / (max(x) - min(x)))}
-
 #Call normalize function
 dataset$Age<-normalize(dataset$Age)
 dataset$Tumor.Size<-normalize(dataset$Tumor.Size)
 dataset$Regional.Node.Examined<-normalize(dataset$Regional.Node.Examined)
 dataset$Reginol.Node.Positive<-normalize(dataset$Reginol.Node.Positive)
 dataset$Survival.Months<-normalize(dataset$Survival.Months)
-
-
 #showing normalized columns
 print(dataset)
 ```
-
 
 #Encoding
 The goal of this code is to convert categorical variables in the dataset into a numeric format. This process is called encoding. this making the dataset more accessible and suitable for machine learning algorithms that require numerical input for training and making predictions.
