@@ -49,24 +49,25 @@ nrow(data)
 ncol(data)
 ```
 - Types of attribute :
-| Attribute name | Description | Data type |Possible values |
-|----------------|--------------|---------------|-----------|
-| Age | age of the patients | numeric| between 30 - 70 |
-| Race | classification of people based on their physical characteristics such as skin color | nominal | white, black or other|
-| Marital status | refers to wether the patient is married ,single or divorced etc | nominal | Divorced ,Married, Separated,    Single , Widowed|
-| T stage | describe the tumors size and if it has spread to the skin or to the chest wall under the breast. Higher T numbers mean a larger tumor | ordinal | T1,T2,T3,T4|
-| N stage | indicates whether the cancer has spread to lymph nodes near the breast | ordinal |N1 ,N2,N3|
-| 6th stage | describes invasive breast cancer | Ordinal |IIA ,  IIB , IIIA , IIIB , IIIC|
-| Differentiation |describes how well developed the tumour cells are and how cancer cells are organised in the tumour tissue | ordinal |  Moderately differentiated  , Poorly differentiated       ,Undifferentiated  , Well differentiated|
-| Grade | depends on what the cells look like, lower grade indicates slower-growing cancer unlike higher grades | ordinal | 1,2 ,3, 4|
-| A stage | Regional : aneoplasm that has extended, Distant : aneoplasm that has spread to parts of the body remote from | asymmetric binary | Distant, Regional|
-| Tumor size | Each indicates exact size of the tumor in millimeters  | ordinal |FROM 1 TO 140 |
-| Estrogen status | The cancer is estrogen receptor-positive if it has receptors for estrogen  | asymmetric binary |Negative, Positive|
-| Progesterone status | The cancer is progesterone receptor-positive if it has progesterone receptors. | asymmetric binary |Negative , Positive|
-| Regional Node Examined | the number of the regional node that have been examined |numeric  | FROM 1 TO 61|
-| Reginol Node Positive | the number of the regional node that heve been confirmed to have cancer |numeric | FROM 1 TO 46|
-| Survival Months | It predicts the number of months to live based on the patient state | numeric | FROM 1 TO 107|
-| Status |  describes weather the patient is dead or alive | asymmetric binary | Dead , alive |
+    | **Attribute name**     | **Description**                                                                                                                       | **Data type**     | **Possible values**                                                                       |
+    |:-----------------------|:--------------------------------------------------------------------------------------------------------------------------------------|:------------------|:------------------------------------------------------------------------------------------|
+    | Age                    | age of the patients                                                                                                                   | numeric           | between 30 - 70                                                                           |
+    | Race                   | classification of people based on their physical characteristics such as skin color                                                   | nominal           | white, black or other                                                                     |
+    | Marital status         | refers to wether the patient is married ,single or divorced etc                                                                       | nominal           | Divorced ,Married, Separated, Single , Widowed                                            |
+    | T stage                | describe the tumors size and if it has spread to the skin or to the chest wall under the breast. Higher T numbers mean a larger tumor | ordinal           | T1,T2,T3,T4                                                                               |
+    | N stage                | indicates whether the cancer has spread to lymph nodes near the breast                                                                | ordinal           | N1 ,N2,N3                                                                                 |
+    | 6th stage              | describes invasive breast cancer                                                                                                      | Ordinal           | IIA , IIB , IIIA , IIIB , IIIC                                                            |
+    | Differentiation        | describes how well developed the tumour cells are and how cancer cells are organised in the tumour tissue                             | ordinal           | Moderately differentiated , Poorly differentiated ,Undifferentiated , Well differentiated |
+    | Grade                  | depends on what the cells look like, lower grade indicates slower-growing cancer unlike higher grades                                 | ordinal           | 1,2 ,3, 4                                                                                 |
+    | A stage                | Regional : aneoplasm that has extended, Distant : aneoplasm that has spread to parts of the body remote from                          | asymmetric binary | Distant, Regional                                                                         |
+    | Tumor size             | Each indicates exact size of the tumor in millimeters                                                                                 | ordinal           | FROM 1 TO 140                                                                             |
+    | Estrogen status        | The cancer is estrogen receptor-positive if it has receptors for estrogen                                                             | asymmetric binary | Negative, Positive                                                                        |
+    | Progesterone status    | The cancer is progesterone receptor-positive if it has progesterone receptors.                                                        | asymmetric binary | Negative , Positive                                                                       |
+    | Regional Node Examined | the number of the regional node that have been examined                                                                               | numeric           | FROM 1 TO 61                                                                              |
+    | Reginol Node Positive  | the number of the regional node that heve been confirmed to have cancer                                                               | numeric           | FROM 1 TO 46                                                                              |
+    | Survival Months        | It predicts the number of months to live based on the patient state                                                                   | numeric           | FROM 1 TO 107                                                                             |
+    | Status                 | describes weather the patient is dead or alive                                                                                        | asymmetric binary | Dead , alive                                                                              |
+
 
 
 # Moving forward, we applied some statistical measures on the dataset to better understand them. The following code show the process:
