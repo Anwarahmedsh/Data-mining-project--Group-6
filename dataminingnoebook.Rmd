@@ -198,19 +198,18 @@ nrow(dataset)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+#Preprocessing
+In the data preprocessing, we applied various techniques to enhance the dataset's suitability for machine learning models. We did both data cleaning and data transformation.  
+For the data cleaning :
+we have already removed the outliers , duplicated rows and we checked wether our dataset have null values or not and it didnt have any. 
+For data transformation: 
+-Normalization was performed on numeric attributes to ensure a consistent scale between 0 and 1.
+-Encoding was performed on categorical variables, converting them into a numeric format, facilitating model training.  
+-Chi-square tests were conducted to evaluate the associations between each categorical attribute and the "Status" variable, revealing significant connections.
+ -Correlation analysis generated a matrix for numeric variables, to understand relationships between them.
 
 #Normalization:
+we had numeric attributes might be measured in different units or have a different range of values (Age, tumor size, Regional Node Examined, Regional Node Positive, Survival months). so we applied Normalization to adjust the quantities of each attribute so that they all fit into the same scale and they all have values between 0 and 1.
 ```{r}
 #Define function normalize
 normalize <- function(x) {return ((x - min(x)) / (max(x) - min(x)))}
@@ -227,11 +226,14 @@ dataset$Survival.Months<-normalize(dataset$Survival.Months)
 print(dataset)
 ```
 
+
+#Encoding
+The goal of this code is to convert categorical variables in the dataset into a numeric format. This process is called encoding. this making the dataset more accessible and suitable for machine learning algorithms that require numerical input for training and making predictions.
 ```{r}
-#encoding
 dataset$Race = factor(dataset$Race,levels = c("White","Black", "Other"), labels=c(1,2,3))
 dataset$Marital.Status = factor(dataset$Marital.Status,levels = c("Married","Divorced","Separated","Single ","Widowed"), labels=c(1,2,3,4,5))
 dataset$differentiate = factor(dataset$differentiate,levels = c("Well differentiated","Moderately differentiated", "Poorly differentiated","Undifferentiated"), labels=c(1,2,3,4))
+dataset$Grade= factor(dataset$Grade,levels = c(1 , 2 ,3 ," anaplastic; Grade IV"), labels=c(1,2,3,4))
 dataset$X6th.Stage = factor(dataset$X6th.Stage,levels = c("IIA","IIIA", "IIB","IIIB","IIIC"), labels=c(1,2,3,4,5))
 dataset$Status = factor(dataset$Status,levels = c("Dead","Alive"), labels=c(0,1))
 dataset$Estrogen.Status = factor(dataset$Estrogen.Status ,levels = c("Negative","Positive"), labels=c(0,1))
@@ -239,13 +241,16 @@ dataset$Progesterone.Status = factor(dataset$Progesterone.Status ,levels = c("Ne
 dataset$A.Stage	 = factor(dataset$A.Stage	,levels = c("Regional","Distant"), labels=c(0,1))
 dataset$T.Stage	 = factor(dataset$T.Stage	,levels = c("T1","T2","T3","T4"), labels=c(1,2,3,4))
 dataset$N.Stage	 = factor(dataset$N.Stage	,levels = c("N1","N2","N3"), labels=c(1,2,3))
+View(dataset)
 ```
+
 ```{r}
 is.na(dataset)
 sum(is.na(dataset))
 ```
 
 #the chi-square
+this code is conducting a series of chi-square tests to assess the association between each categorical attribute in the dataset and the "Status" variable.
 ```{r}
 # Get the column names of the dataset
 column_names <- colnames(dataset)
@@ -266,16 +271,29 @@ for (attribute in column_names) {
   }
 }
 ```
-#the chi-square test results indicate that most of the attributes have a significant association with the variable being tested. These attributes include Age, Race, Marital.Status, T.Stage, N.Stage, X6th.Stage, differentiate, Grade, A.Stage, Estrogen.Status, Progesterone.Status, Regional.Node.Examined, Reginol.Node.Positive, Tumor.Size, Survival.Months, and Status. The low p-values provide strong evidence to reject the null hypothesis of no association between these attributes and the variable.
-#Since they are highly correlated there is no need to perform feature selection
+the chi-square test results indicate that most of the attributes have a significant association with the variable being tested. These attributes include Age, Race, Marital.Status, T.Stage, N.Stage, X6th.Stage, differentiate, Grade, A.Stage, Estrogen.Status, Progesterone.Status, Regional.Node.Examined, Reginol.Node.Positive, Tumor.Size, Survival.Months, and Status. The low p-values provide strong evidence to reject the null hypothesis of no association between these attributes and the variable. #Since they are highly correlated there is no need to perform feature selection
+
+
+#correlation analysis
+This code extracts numeric attributes from the dataset, calculates the correlation matrix for those numeric variables, and then prints the correlation matrix.
+```{r}
+numeric_datas <- dataset[, sapply(dataset, is.numeric)]
+
+# Calculate the correlation matrix for numeric variables
+correlation_matrix <- cor(numeric_datas)
+
+# Print the correlation matrix
+print(correlation_matrix)
+
+```
+The matrix shows the correlation coefficients between pairs of variables. The values range from -1 to 1, where -1 indicates a perfect negative correlation, 1 indicates a perfect positive correlation, and 0 indicates no correlation.
+For example, looking at "Tumor.Size" and "Reginol.Node.Positive," the correlation coefficient is 0.245566, indicating a positive correlation which means that the larger tumor size the greater number of nodes affected . In contrast, "Reginol.Node.Positive" and "Survival.Months" have a correlation coefficient of -0.13344498 which means the greater number of affected nodes the fewer months to live
 
 
 
+#feature selection 
+other way to choose the relevant attributes to the dataset, we performed this feature selection if you want to check it out, although we think the chi square is better \# ensure the results are repeatable
 
-
-#feature selection
-#other way to choose the relevant attributes to the dataset, we performed this feature selection if you want to check it out, although we think the chi square is better
-# ensure the results are repeatable
 ```{r}
 set.seed(7)
 # load the library
@@ -297,7 +315,11 @@ rfe_result <- rfe(features, target, sizes = 1:ncol(features), rfeControl = ctrl)
 print(rfe_result)
 plot(rfe_result)
 ```
-#This feature selection graphical representation shows the higher-ranked features that considered more important or relevant for predicting the target variable which are: Survival.Months, Reginol.Node.Positive, X6th.Stage, Progesterone. Status, Age.,this helps choosing which features to include or exclude . so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand.
+
+This feature selection graphical representation shows the higher-ranked features that considered more important or relevant for predicting the target variable which are: Survival.Months, Reginol.Node.Positive, X6th.Stage, Progesterone. Status, Age.,this helps choosing which features to include or exclude . so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand.
+
+
+
 
 #Classification
 ```{r}
