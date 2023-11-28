@@ -312,6 +312,11 @@ This feature selection graphical representation shows the higher-ranked features
 
 
 #Classification
+For classification applied three different classification algorithms ID3 with information gain, CART with Gini index, and C4.5 (C5.0) with gain ratio for each size ( 70% 30% , 60% 40% , 80% 20% ). .
+-For the ID3 algorithm, we utilized the rpart package with the information split method, and the resulting decision tree was visualized and evaluated using confusion matrix, sensitivity, specificity, precision, and accuracy.
+-For the CART algorithm, we used the gini split method with the rpart package, visualized the decision tree, and evaluated the model's performance using confusion matrix, sensitivity, specificity, precision, and accuracy.
+-For the C4.5 (C5.0) algorithm, we employed the C50 package and visualized the decision tree using the party and partykit packages, then evaluated using confusion matrix, sensitivity, specificity, precision, and accuracy.
+
 ```{r}
 dataset$Status <- factor(dataset$Status)
 # Set the random seed for reproducibility
