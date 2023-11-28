@@ -326,7 +326,7 @@ plot(rfe_result)
 This feature selection graphical representation shows the higher-ranked features that considered more important or relevant for predicting the target variable which are: Survival.Months, Reginol.Node.Positive, X6th.Stage, Progesterone. Status, Age.,this helps choosing which features to include or exclude . so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand.
 
 
-
+#Data mining technique
 
 #Classification
 For classification applied three different classification algorithms ID3 with information gain, CART with Gini index, and C4.5 (C5.0) with gain ratio for each size ( 70% 30% , 60% 40% , 80% 20% ). .
@@ -1302,3 +1302,13 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 |                    | | **BCubed precision**                   |                          |                         |                           | |
 |                    | +----------------------------------------+--------------------------+-------------------------+---------------------------+ |
 +--------------------+-----------------------------------------------------------------------------------------------------------------------------+
+
+
+#Findings
+
+
+
+
+
+
+#References 
