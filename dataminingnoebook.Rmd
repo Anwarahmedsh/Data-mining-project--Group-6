@@ -1027,14 +1027,14 @@ cat("BCubed Recall:", recall)
 #a)fviz_nbclust() with silhouette method using library(factoextra)
 fviz_nbclust(dataset, kmeans, method = "silhouette")+labs(subtitle ="Silhouette method")
 ```
-#The plot consist of a line or curve that represents the silhouette scores for different numbers of clusters (k), The number of clusters in this graph is fixed at three. The ideal number of clusters is shown by the graph's highest point. This indicates the number of clusters that provide the optimal clustering solution and number of clusters that  is often associated with a peak in the silhouette scores
+# The plot consist of a line or curve that represents the silhouette scores for different numbers of clusters (k), The number of clusters in this graph is fixed at three. The ideal number of clusters is shown by the graph's highest point. This indicates the number of clusters that provide the optimal clustering solution and number of clusters that  is often associated with a peak in the silhouette scores
 
 
 
 ```{r}
 
 ```
-The resulting plot helps visualize the trend in silhouette scores as the number of clusters (k) increases. It allows  to identify the optimal number of clusters based on the highest silhouette score, which indicates better clustering quality and separation of data points within their assigned clusters. here we have the optimal k=6
+
 ```{r}
 
 
@@ -1046,10 +1046,9 @@ The resulting plot helps visualize the trend in silhouette scores as the number 
 
 ```
 
-#by the provided code for each classification and clustering you can definitely tell that the classification is the best fit for our dataset since we have high accuracy= 0.9 unlike with the clustering=0.00150338261087447
 
 
-#Evaluation and Comparison
+# Evaluation and Comparison
 +--------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | Mining task :     | Comparison Criteria :                                                                                                       |
 +====================+=============================================================================================================================+
@@ -1079,11 +1078,11 @@ The resulting plot helps visualize the trend in silhouette scores as the number 
 +--------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 
-#Findings
+# Findings
 
 
 
 
 
 
-#References 
+# References 
