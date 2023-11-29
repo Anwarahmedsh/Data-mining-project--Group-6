@@ -44,9 +44,9 @@ The goal of this project is to develop a machine learning model that goes beyond
 - The class name : status.
 ```{r}
 #Number of rows
-nrow(data)
+nrow(dataset)
 #Number of columns
-ncol(data)
+ncol(dataset)
 ```
 - Types of attribute :
 
