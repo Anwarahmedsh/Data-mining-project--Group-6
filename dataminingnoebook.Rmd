@@ -340,9 +340,9 @@ dataset$Status <- factor(dataset$Status)
 set.seed(1234)
 
 # Split the dataset into training 70% and testing 30% subsets
-ind <- sample(2, nrow(dataset), replace = TRUE, prob = c(0.7 , 0.3))
-trainData <- dataset[ind == 1,]
-testData <- dataset[ind == 2,]
+ind <- sample(1:nrow(dataset), size = floor(0.7 * nrow(dataset)), replace = FALSE)
+trainData <- dataset[ind,]
+testData <- dataset[-ind,]
 myFormula <- Status ~ Age + Marital.Status + Race + T.Stage + N.Stage + X6th.Stage + differentiate + Grade + A.Stage + Tumor.Size + Estrogen.Status + Progesterone.Status + Reginol.Node.Positive + Regional.Node.Examined + Survival.Months 
 ```
 
@@ -482,9 +482,9 @@ we calculated confusion matrix, sensitivity, specificity, precision, and overall
 ```{r}
 
 # Split the dataset into 80% training and 20% testing subsets
-indfo <- sample(2, nrow(dataset), replace = TRUE, prob = c(0.8 , 0.2))
-trainData <- dataset[indfo == 1,]
-testData <- dataset[indfo == 2,]
+indfo <- sample(1:nrow(dataset), size = floor(0.8 * nrow(dataset)), replace = FALSE)
+trainData <- dataset[indfo,]
+testData <- dataset[-indfo,]
 ```
 
 ```{r}
@@ -609,9 +609,9 @@ The following is a 20% testing and 80% Training information gain ratio created w
 The goal is to build a tree that distinguishes among the classes. For sensitivity, sensitivity, accuracy, precision and a lot of other measures. as we can see below the sensitivity of the tree says its 42% correctly identified by the classifier which is not a really perfect thing but the rest of the measures were great 
 ```{r}
 # Split the dataset into 60% training and 40% testing subsets
-indfod<- sample(2, nrow(dataset), replace = TRUE, prob = c(0.6 , 0.4))
-trainData <- dataset[indfod== 1,]
-testData <- dataset[indfod == 2,]
+indfod <- sample(1:nrow(dataset), size = floor(0.6 * nrow(dataset)), replace = FALSE)
+trainData <- dataset[indfod,]
+testData <- dataset[-indfod,]
 ```
 
 ```{r}
