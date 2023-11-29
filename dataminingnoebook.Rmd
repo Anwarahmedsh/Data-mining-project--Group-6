@@ -733,26 +733,23 @@ consistency across different partitions and attribute selection methods is a pos
 # Clustering is unsupervised learning so there is no class label, it is the task of dividing the unlabeled data or data points into different clusters such that similar data points fall in the same cluster than those which differ from the others. In simple words, the aim of the clustering process is to segregate groups with similar traits and assign them into clusters.
 # in this project we used the K-means algorithm, it is a centroid-based clustering algorithm. it works randomly selecting K objects as the centroids of K clusters. Then, it assigns the other objects to the nearest cluster to them by measuring the distance between the centroid and each object. Consequently, updates the clusters and compute the new centroids, then repeats until no significant change of clusters occurs. For the approach to work, numerical data and prior knowledge of the number of clusters K are required, K-Means works well with our dataset because we converted every entry to a numeric value in the stage of preprocessing.
 # K-Means clustering was applied with the assistance of the the R packages and packages listed below:
-o factoextra package: Extract and Visualize the Results of Multivariate Data Analyses.
-o cluster package: provides methods for Cluster analysis.
-o NbClust package: provides 30 indexes for determining the optimal number of clusters in data set and offers the best clustering scheme from different results.
-o set.seed(): Create reproducible results
-o kmeans(): Clusters data based on similarity.
-o fviz_cluster(): Visualize clustering results.
-o silhouette(): Find the average for each and all clusters.
-o fviz_silhouette(): Visualize the silhouette information.
-o fviz_nbclust(): Determining the optimal number of clusters.
+# factoextra package: Extract and Visualize the Results of Multivariate Data Analyses.
+# cluster package: provides methods for Cluster analysis.
+# NbClust package: provides 30 indexes for determining the optimal number of clusters in data set and offers the best clustering scheme from different results.
+# set.seed(): Create reproducible results
+# kmeans(): Clusters data based on similarity.
+# fviz_cluster(): Visualize clustering results.
+# silhouette(): Find the average for each and all clusters.
+# fviz_silhouette(): Visualize the silhouette information.
+# fviz_nbclust(): Determining the optimal number of clusters.
 
 
 # We will experiment with the following three values of k: (3,4,5). We will compute the average silhouette ,total within-cluster sum of square and the BCubed metrics (precision and recall) for each K.
 
 
-
-The resulting plot displays a scatter plot where each data point is represented as a point on the plot. The points are colored based on their assigned cluster, allowing for visual exploration of the clustering results. The plot title and axis labels provide additional context for interpreting the plot, this plot shows 4 clusters for this dataset and is chosen as the optimal k number
-
-#Clustr of size=3
-#this number was chosen after applying the silhouette method which shows that 3 is the optimal number for clustring
-#This code applies the k-means clustering algorithm on the dataset, and then evaluates the clustering results using various metrics, including silhouette analysis and BCubed metrics.The BCubed metrics provide an evaluation of the clustering results by comparing them to ground truth label, assuming they are available in the 'datawithcl' dataset.
+# Clustr of size=3
+# this number was chosen after applying the silhouette method which shows that 3 is the optimal number for clustring
+# This code applies the k-means clustering algorithm on the dataset, and then evaluates the clustering results using various metrics, including silhouette analysis and BCubed metrics.The BCubed metrics provide an evaluation of the clustering results by comparing them to ground truth label, assuming they are available in the 'datawithcl' dataset.
 ```{r}
 
 library(factoextra)
@@ -844,16 +841,184 @@ cat("BCubed Recall:", recall)
 #this number was chosen randomlly
 ```{r}
 
+library(factoextra)
+library(NbClust)
+library(cluster)
+
+datawithcl<-dataset #dataset with the class label) # dataset with a class label
+dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
+
+str(dataset)
+
+#converting intger columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
+numeric_dataset = dataset
+numeric_dataset$Race = as.numeric(as.character(dataset$Race))
+numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
+numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
+numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
+numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
+numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
+numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
+numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
+numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
+numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
+str(numeric_dataset)
+
+#appling the k-means clustering algorithm (kmeans function) to the preprocessed dataset with three clusters (centers = 4). The maximum number of iterations is set to 140, and the algorithm used is "Lloyd"which is an iterative method used to solve the k-means clustering problem. The algorithm minimizes the sum of squared distances between data points and the centroids (mean points) of their respective clusters. and The results are stored in the variable 'kmns'
+
+kmns <- kmeans(dataset, 4, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+kmns
+
+#using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
+
+library(factoextra)
+fviz_cluster(kmns, data = dataset, geom = "point", 
+             show.clust.cent = FALSE, ellipse = TRUE, 
+             repel = TRUE, ggtheme = theme_minimal())
+
+
+
+#calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
+#Cluster Validation
+library(cluster)
+#average for each cluster
+avg_sil <- silhouette(kmns$cluster,dist(dataset))
+fviz_silhouette(avg_sil)
+
+
+#calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
+# Calculate the WCSS
+wcss <- sum(kmns$withinss)
+
+# Print the WCSS
+print(wcss)
+
+
+#defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
+#BCubed Metrics
+cluster_assignments <- kmns$cluster
+ground_truth_labels <- datawithcl$Status
+
+calculate_bcubed_metrics <- function(cluster_assignments, ground_truth_labels) {
+  precision_sum <- recall_sum <- 0
+  
+  for (i in seq_along(cluster_assignments)) {
+    same_category_same_cluster <- sum(ground_truth_labels[cluster_assignments == cluster_assignments[i]] == ground_truth_labels[i])
+    total_same_cluster <- sum(cluster_assignments == cluster_assignments[i])
+    total_same_category <- sum(ground_truth_labels == ground_truth_labels[i])
+    
+    precision_sum <- precision_sum + same_category_same_cluster / total_same_cluster
+    recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+  
+  precision <- precision_sum / length(cluster_assignments)
+  recall <- recall_sum / length(cluster_assignments)
+  
+  return(list(precision = precision, recall = recall))
+}
+
+metrics <- calculate_bcubed_metrics(cluster_assignments, ground_truth_labels)
+precision <- metrics$precision
+recall <- metrics$recall
+
+cat("BCubed Precision:", precision)
+cat("BCubed Recall:", recall)
 ```
 
 
 
 
-#Clustr of size=6
-#this number was chosen after applying Silhouette coefficient which indicate 6 as the optimal k
+#Clustr of size=5
+#this number was chosen randomlly
 ```{r}
 
+library(factoextra)
+library(NbClust)
+library(cluster)
+
+datawithcl<-dataset #dataset with the class label) # dataset with a class label
+dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
+
+str(dataset)
+
+#converting intger columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
+numeric_dataset = dataset
+numeric_dataset$Race = as.numeric(as.character(dataset$Race))
+numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
+numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
+numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
+numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
+numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
+numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
+numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
+numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
+numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
+str(numeric_dataset)
+
+#appling the k-means clustering algorithm (kmeans function) to the preprocessed dataset with three clusters (centers = 5). The maximum number of iterations is set to 140, and the algorithm used is "Lloyd"which is an iterative method used to solve the k-means clustering problem. The algorithm minimizes the sum of squared distances between data points and the centroids (mean points) of their respective clusters. and The results are stored in the variable 'kmns'
+
+kmns <- kmeans(dataset, 5, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+kmns
+
+#using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
+
+library(factoextra)
+fviz_cluster(kmns, data = dataset, geom = "point", 
+             show.clust.cent = FALSE, ellipse = TRUE, 
+             repel = TRUE, ggtheme = theme_minimal())
+
+
+
+#calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
+#Cluster Validation
+library(cluster)
+#average for each cluster
+avg_sil <- silhouette(kmns$cluster,dist(dataset))
+fviz_silhouette(avg_sil)
+
+
+#calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
+# Calculate the WCSS
+wcss <- sum(kmns$withinss)
+
+# Print the WCSS
+print(wcss)
+
+
+#defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
+#BCubed Metrics
+cluster_assignments <- kmns$cluster
+ground_truth_labels <- datawithcl$Status
+
+calculate_bcubed_metrics <- function(cluster_assignments, ground_truth_labels) {
+  precision_sum <- recall_sum <- 0
+  
+  for (i in seq_along(cluster_assignments)) {
+    same_category_same_cluster <- sum(ground_truth_labels[cluster_assignments == cluster_assignments[i]] == ground_truth_labels[i])
+    total_same_cluster <- sum(cluster_assignments == cluster_assignments[i])
+    total_same_category <- sum(ground_truth_labels == ground_truth_labels[i])
+    
+    precision_sum <- precision_sum + same_category_same_cluster / total_same_cluster
+    recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+  
+  precision <- precision_sum / length(cluster_assignments)
+  recall <- recall_sum / length(cluster_assignments)
+  
+  return(list(precision = precision, recall = recall))
+}
+
+metrics <- calculate_bcubed_metrics(cluster_assignments, ground_truth_labels)
+precision <- metrics$precision
+recall <- metrics$recall
+
+cat("BCubed Precision:", precision)
+cat("BCubed Recall:", recall)
 ```
+
+
+
+
 
 # Since choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time
 # To find the optimal number of clusters; we have used "fviz_nbclust()" with silhouette method. it
