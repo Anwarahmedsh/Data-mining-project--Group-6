@@ -729,19 +729,42 @@ This is a positive sign indicating that the model's performance is consistent an
 Information Gain, Information Gain Ratio, and Gini Index algorithms lead to similar results, it indicates that, these metrics are providing comparable insights into the dataset.
 consistency across different partitions and attribute selection methods is a positive signal, it's advisable to perform thorough evaluation, including testing on a separate dataset, to ensure the model's reliability and generalization capabilities
 
-#Clustring
-#For clustering I chose k-medioid method because it the best fit with my dataset, I tried three Ks 4,5,6.
-By my understanding I found that 4 is the best K because the points well
-distributed. I chose the attributes survival months and age after trying multiple attributes i found they give the best results, and also they fit with our goal of clustring that we specicfied in phase 1
+# Clustring
+# Clustering is unsupervised learning so there is no class label, it is the task of dividing the unlabeled data or data points into different clusters such that similar data points fall in the same cluster than those which differ from the others. In simple words, the aim of the clustering process is to segregate groups with similar traits and assign them into clusters.
+# in this project we used the K-means algorithm, it is a centroid-based clustering algorithm. it works randomly selecting K objects as the centroids of K clusters. Then, it assigns the other objects to the nearest cluster to them by measuring the distance between the centroid and each object. Consequently, updates the clusters and compute the new centroids, then repeats until no significant change of clusters occurs. For the approach to work, numerical data and prior knowledge of the number of clusters K are required, K-Means works well with our dataset because we converted every entry to a numeric value in the stage of preprocessing.
+# K-Means clustering was applied with the assistance of the the R packages and packages listed below:
+o factoextra package: Extract and Visualize the Results of Multivariate Data Analyses.
+o cluster package: provides methods for Cluster analysis.
+o NbClust package: provides 30 indexes for determining the optimal number of clusters in data set and offers the best clustering scheme from different results.
+o set.seed(): Create reproducible results
+o kmeans(): Clusters data based on similarity.
+o fviz_cluster(): Visualize clustering results.
+o silhouette(): Find the average for each and all clusters.
+o fviz_silhouette(): Visualize the silhouette information.
+o fviz_nbclust(): Determining the optimal number of clusters.
+
+
+# We will experiment with the following three values of k: (3,4,5). We will compute the average silhouette ,total within-cluster sum of square and the BCubed (precision and recall) for each K.
+
+
 
 The resulting plot displays a scatter plot where each data point is represented as a point on the plot. The points are colored based on their assigned cluster, allowing for visual exploration of the clustering results. The plot title and axis labels provide additional context for interpreting the plot, this plot shows 4 clusters for this dataset and is chosen as the optimal k number
 
-#Clustr of size=4
-#this number was chosen after applying the elbow method which shows that 4 is the optimal number for clustring
+#Clustr of size=3
+#this number was chosen after applying the silhouette method which shows that 3 is the optimal number for clustring
 ```{r}
+library(factoextra)
+library(NbClust)
+library(cluster)
+
+datawithcl<-dataset #dataset with the class label)
+dataset <- dataset[, -which(names(dataset) == "Status")]
+
+str(dataset)
+
+
 #Converting interger&factor columns to numeric SO we can perform 
 numeric_dataset = dataset
-numeric_dataset$Age = as.numeric(as.character(dataset$Age))
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
 numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
 numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
@@ -750,96 +773,84 @@ numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
 numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
 numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
 numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
-numeric_dataset$Tumor.Size = as.numeric(as.character(dataset$Tumor.Size))
 numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
 numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
-numeric_dataset$Regional.Node.Examined = as.numeric(as.character(dataset$Regional.Node.Examined))
-numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.Node.Positive))
-numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
-numeric_dataset$Status = as.numeric(as.character(dataset$Status))
 str(numeric_dataset)
+
+
+
+kmns <- kmeans(dataset, 3, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+kmns
+
+
+library(factoextra)
+fviz_cluster(kmns, data = dataset, geom = "point", 
+             show.clust.cent = FALSE, ellipse = TRUE, 
+             repel = TRUE, ggtheme = theme_minimal())
+
+
+
+
+###Cluster Validation
 library(cluster)
-library(ggplot2)
-# Assuming 'data' is your object
-if (class(data) == "data.frame") {
-  # Your code for subsetting columns here
-} else {
-  # Handle the case where 'data' is not a data frame
-  print("The 'data' object is not a data frame.")
+#average for each cluster
+avg_sil <- silhouette(kmns$cluster,dist(dataset))
+fviz_silhouette(avg_sil)
+
+
+# Assuming you have a clustering result stored in Kresult$cluster
+cluster_assignments <- kmns$cluster
+
+# Calculate the majority cluster
+majority_cluster <- names(which.max(table(cluster_assignments)))
+
+# Print the majority cluster
+print(majority_cluster)
+
+
+# Calculate the WCSS
+wcss <- sum(kmns$withinss)
+
+# Print the WCSS
+print(wcss)
+
+
+
+#bcybed
+cluster_assignments <- kmns$cluster
+ground_truth_labels <- datawithcl$Status
+
+calculate_bcubed_metrics <- function(cluster_assignments, ground_truth_labels) {
+  precision_sum <- recall_sum <- 0
+  
+  for (i in seq_along(cluster_assignments)) {
+    same_category_same_cluster <- sum(ground_truth_labels[cluster_assignments == cluster_assignments[i]] == ground_truth_labels[i])
+    total_same_cluster <- sum(cluster_assignments == cluster_assignments[i])
+    total_same_category <- sum(ground_truth_labels == ground_truth_labels[i])
+    
+    precision_sum <- precision_sum + same_category_same_cluster / total_same_cluster
+    recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+  
+  precision <- precision_sum / length(cluster_assignments)
+  recall <- recall_sum / length(cluster_assignments)
+  
+  return(list(precision = precision, recall = recall))
 }
 
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-# Example usage
-selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-k <- 4 # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
+metrics <- calculate_bcubed_metrics(cluster_assignments, ground_truth_labels)
+precision <- metrics$precision
+recall <- metrics$recall
 
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
+cat("BCubed Precision:", precision)
+cat("BCubed Recall:", recall)
 
-
-# Create scatter plot with colored clusters
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 ```
 
-#Clustr of size=5
+#Clustr of size=4
 #this number was chosen randomlly
 ```{r}
-#Converting interger&factor columns to numeric SO we can perform 
-numeric_dataset = dataset
-numeric_dataset$Age = as.numeric(as.character(dataset$Age))
-numeric_dataset$Race = as.numeric(as.character(dataset$Race))
-numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
-numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
-numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
-numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
-numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
-numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
-numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
-numeric_dataset$Tumor.Size = as.numeric(as.character(dataset$Tumor.Size))
-numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
-numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
-numeric_dataset$Regional.Node.Examined = as.numeric(as.character(dataset$Regional.Node.Examined))
-numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.Node.Positive))
-numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
-numeric_dataset$Status = as.numeric(as.character(dataset$Status))
-str(numeric_dataset)
-library(cluster)
-library(ggplot2)
-# Assuming 'data' is your object
-if (class(data) == "data.frame") {
-  # Your code for subsetting columns here
-} else {
-  # Handle the case where 'data' is not a data frame
-  print("The 'data' object is not a data frame.")
-}
 
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-# Example usage
-selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-k <- 5 # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
-
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
-
-
-# Create scatter plot with colored clusters
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 ```
 
 
@@ -848,429 +859,35 @@ ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
 #Clustr of size=6
 #this number was chosen after applying Silhouette coefficient which indicate 6 as the optimal k
 ```{r}
-#Converting interger&factor columns to numeric SO we can perform 
-numeric_dataset = dataset
-numeric_dataset$Age = as.numeric(as.character(dataset$Age))
-numeric_dataset$Race = as.numeric(as.character(dataset$Race))
-numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
-numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
-numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
-numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
-numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
-numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
-numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
-numeric_dataset$Tumor.Size = as.numeric(as.character(dataset$Tumor.Size))
-numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
-numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
-numeric_dataset$Regional.Node.Examined = as.numeric(as.character(dataset$Regional.Node.Examined))
-numeric_dataset$Reginol.Node.Positive = as.numeric(as.character(dataset$Reginol.Node.Positive))
-numeric_dataset$Survival.Months = as.numeric(as.character(dataset$Survival.Months))
-numeric_dataset$Status = as.numeric(as.character(dataset$Status))
-str(numeric_dataset)
 
-
-library(cluster)
-library(ggplot2)
-# Assuming 'data' is your object
-if (class(data) == "data.frame") {
-  # Your code for subsetting columns here
-} else {
-  # Handle the case where 'data' is not a data frame
-  print("The 'data' object is not a data frame.")
-}
-
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-# Example usage
-selected_columns <- c('Age', "Survival.Months")  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-k <- 6 # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
-
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_assignments)
-
-
-# Create scatter plot with colored clusters
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 ```
-#The elbow method is a technique used to determine the optimal number of clusters in a clustering analysis by looking for the "elbow" point in the plot, which is the point of diminishing returns in reducing the within-cluster sum of squares (WSS) as the number of clusters increases. The plot helps visualize this relationship and assists in determining an appropriate number of clusters for the given data. which is 4 in our dataset
-#also choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time
+
+# Since choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time
+# To find the optimal number of clusters; we have used "fviz_nbclust()" with silhouette method. it
+indicates that the optimal number of clusters is K=3.
+```{r}
+# 2- silhouette method
+#a)fviz_nbclust() with silhouette method using library(factoextra)
+fviz_nbclust(dataset, kmeans, method = "silhouette")+labs(subtitle ="Silhouette method")
+```
+
+
 
 ```{r}
-library(cluster)
-library(ggplot2)
 
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-
-# Example usage
-selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-max_k <- 10  # Maximum number of clusters to consider
-
-wss_values <- vector("numeric", max_k)  # Empty vector to store WSS values
-
-for (k in 1:max_k) {
-  cluster_assignments <- k_medoids_clustering(selected_data, k)  # Perform k-medoids clustering
-  wss <- 0  # Initialize within-cluster sum of squares (WSS) value
-  
-  # Calculate WSS for the current k
-  for (i in 1:k) {
-    cluster_points <- selected_data[cluster_assignments == i, , drop = FALSE]
-    
-    # Calculate medoid as the observation with minimum average dissimilarity
-    cluster_distances <- proxy::dist(cluster_points)
-    avg_dissimilarity <- rowMeans(as.matrix(cluster_distances))
-    medoid_index <- which.min(avg_dissimilarity)
-    medoid <- cluster_points[medoid_index, ]
-    
-    cluster_distances <- proxy::dist(rbind(cluster_points, medoid))
-    wss <- wss + sum(cluster_distances[1:nrow(cluster_points)])
-  }
-  
-  wss_values[k] <- wss  # Store WSS value
-}
-
-# Plot WSS values against k values
-elbow_plot <- ggplot() +
-  geom_line(aes(x = 1:max_k, y = wss_values)) +
-  geom_point(aes(x = 1:max_k, y = wss_values)) +
-  labs(title = "Elbow Method", x = "Number of Clusters (k)", y = "Within-Cluster Sum of Squares (WSS)")
-
-print(elbow_plot)
-```
-#another code for elbow method
-```{r}
-# 3- Elbow method
-#fviz_nbclust() with within cluster sums of squares (wss) method
-library(factoextra) 
-fviz_nbclust(dataset, pam, method = "wss") +
-  geom_vline(xintercept = 4, linetype = 2)+
-  labs(subtitle = "Elbow method")
 ```
 The resulting plot helps visualize the trend in silhouette scores as the number of clusters (k) increases. It allows  to identify the optimal number of clusters based on the highest silhouette score, which indicates better clustering quality and separation of data points within their assigned clusters. here we have the optimal k=6
 ```{r}
-# Perform scaling on the data
-scaled_data <- scale(data)
 
-# Required libraries
-library(fpc)
-library(ggplot2)
-
-# Determine the optimal number of clusters using the silhouette method
-sil_scores <- c()
-for (k in 2:10) {
-  kmedoids_result <- pam(scaled_data, k = k)
-  dissimilarity <- as.dist(dist(scaled_data))
-  sil_scores[k-1] <- cluster.stats(dissimilarity, kmedoids_result$clustering)$avg.silwidth
-}
-
-# Plot the silhouette scores
-k_values <- 2:10
-silhouette_df <- data.frame(k = k_values, silhouette_score = sil_scores)
-ggplot(silhouette_df, aes(x = k, y = silhouette_score)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Number of Clusters (k)", y = "Silhouette Score") +
-  ggtitle("Silhouette Score vs. Number of Clusters")
 
 ```
-#here you can run the cluster and see BCubed precision and recall result thet we performed on the clustering method with k=4, "B-Cubed Precision: 0.00150338261087447""B-Cubed Recall: 0.00150338261087447" #The results are similar It could that when the clusters are well-separated and distinct, a clustering algorithm might assign instances to clusters with a high degree of accuracy, leading to similar precision and recall values
+
 ```{r}
-# Convert relevant columns to numeric
-numeric_dataset <- dataset
-numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
-numeric_dataset$Survival.Months <- as.numeric(as.character(numeric_dataset$Survival.Months))
-
-# Check the structure of numeric_dataset
-str(numeric_dataset)
-
-# Define k_medoids_clustering function
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-
-# Example usage
-selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-k <- 4  # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
-
-# Convert cluster assignments to integer codes
-cluster_codes <- as.integer(cluster_assignments)
-
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_codes)
-
-# Corrected B-Cubed metrics calculation
-bcubed_precision_recall <- function(labels_true, labels_pred) {
-  labels_true <- as.factor(labels_true)
-  labels_pred <- as.factor(labels_pred)
-  
-  unique_labels <- unique(labels_true)
-  num_points <- length(labels_true)
-  
-  precision_sum <- 0
-  recall_sum <- 0
-  
-  for (true_label in unique_labels) {
-    true_indices <- labels_true == true_label
-    pred_labels <- labels_pred[true_indices]
-    
-    unique_pred_labels <- unique(pred_labels)
-    
-    for (pred_label in unique_pred_labels) {
-      common_points <- sum(pred_labels == pred_label)
-      precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
-      recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
-    }
-  }
-  
-  precision <- precision_sum / num_points
-  recall <- recall_sum / num_points
-  
-  return(list(precision = precision, recall = recall))
-}
-
-precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_codes)
-precision <- precision_recall$precision
-recall <- precision_recall$recall
-
-print(paste("B-Cubed Precision:", precision))
-print(paste("B-Cubed Recall:", recall))
-
-# Define function to compute average silhouette for k clusters using silhouette()
-silhouette_score <- function(data, k) {
-  cluster_assignments <- k_medoids_clustering(data, k)
-  ss <- silhouette(cluster_assignments, dist(data))
-  sil <- mean(ss[, 3])
-  return(sil)
-}
-
-# k cluster range from 2 to 10
-k <- 2:10
-
-# Call function for each k value
-avg_sil <- sapply(k, function(k_val) silhouette_score(selected_data[, c('Age', 'Survival.Months')], k_val))
-
-# Plot the results
-plot(k, avg_sil, type = 'b', xlab = 'Number of clusters', ylab = 'Average Silhouette Scores', frame = FALSE)
-
-
-# Create scatter plot with colored clusters
-library(ggplot2)
-
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
 
 
 
 ```
 
-#here you can run the cluster with k=5 and see its graph and b-cubed results
- "B-Cubed Precision: 0.00125281884239539"
- "B-Cubed Recall: 0.00125281884239539"
-```{r}
-# Convert relevant columns to numeric
-numeric_dataset <- dataset
-numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
-numeric_dataset$Survival.Months <- as.numeric(as.character(numeric_dataset$Survival.Months))
-
-# Check the structure of numeric_dataset
-str(numeric_dataset)
-
-# Define k_medoids_clustering function
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-
-# Example usage
-selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-k <- 5  # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
-
-# Convert cluster assignments to integer codes
-cluster_codes <- as.integer(cluster_assignments)
-
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_codes)
-
-# Corrected B-Cubed metrics calculation
-bcubed_precision_recall <- function(labels_true, labels_pred) {
-  labels_true <- as.factor(labels_true)
-  labels_pred <- as.factor(labels_pred)
-  
-  unique_labels <- unique(labels_true)
-  num_points <- length(labels_true)
-  
-  precision_sum <- 0
-  recall_sum <- 0
-  
-  for (true_label in unique_labels) {
-    true_indices <- labels_true == true_label
-    pred_labels <- labels_pred[true_indices]
-    
-    unique_pred_labels <- unique(pred_labels)
-    
-    for (pred_label in unique_pred_labels) {
-      common_points <- sum(pred_labels == pred_label)
-      precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
-      recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
-    }
-  }
-  
-  precision <- precision_sum / num_points
-  recall <- recall_sum / num_points
-  
-  return(list(precision = precision, recall = recall))
-}
-
-precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_codes)
-precision <- precision_recall$precision
-recall <- precision_recall$recall
-
-print(paste("B-Cubed Precision:", precision))
-print(paste("B-Cubed Recall:", recall))
-
-# Define function to compute average silhouette for k clusters using silhouette()
-silhouette_score <- function(data, k) {
-  cluster_assignments <- k_medoids_clustering(data, k)
-  ss <- silhouette(cluster_assignments, dist(data))
-  sil <- mean(ss[, 3])
-  return(sil)
-}
-
-# k cluster range from 2 to 10
-k <- 2:10
-
-# Call function for each k value
-avg_sil <- sapply(k, function(k_val) silhouette_score(selected_data[, c('Age', 'Survival.Months')], k_val))
-
-# Plot the results
-plot(k, avg_sil, type = 'b', xlab = 'Number of clusters', ylab = 'Average Silhouette Scores', frame = FALSE)
-
-
-# Create scatter plot with colored clusters
-library(ggplot2)
-
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
-
-  
-
-
-```
-
-#here you can run the cluster with k=6 and see its graph and b-cubed results
-#"B-Cubed Precision: 0.00150338261087447"
-#"B-Cubed Recall: 0.00150338261087447"
-#the result is concedred very low
-```{r}
-# Convert relevant columns to numeric
-numeric_dataset <- dataset
-numeric_dataset$Age <- as.numeric(as.character(numeric_dataset$Age))
-numeric_dataset$Survival.Months <- as.numeric(as.character(numeric_dataset$Survival.Months))
-
-# Check the structure of numeric_dataset
-str(numeric_dataset)
-
-# Define k_medoids_clustering function
-k_medoids_clustering <- function(data, k) {
-  dissimilarity_matrix <- dist(data)  # Compute dissimilarity matrix
-  k_medoids_result <- pam(dissimilarity_matrix, k)  # Perform k-medoids clustering
-  return(k_medoids_result$clustering)  # Return cluster assignments
-}
-
-# Example usage
-selected_columns <- c('Age', 'Survival.Months')  # Select relevant columns
-selected_data <- numeric_dataset[, selected_columns]
-k <- 6  # Number of clusters
-cluster_assignments <- k_medoids_clustering(selected_data, k)
-
-# Convert cluster assignments to integer codes
-cluster_codes <- as.integer(cluster_assignments)
-
-# Add cluster assignments to the selected data
-selected_data$Cluster <- as.factor(cluster_codes)
-
-# Corrected B-Cubed metrics calculation
-bcubed_precision_recall <- function(labels_true, labels_pred) {
-  labels_true <- as.factor(labels_true)
-  labels_pred <- as.factor(labels_pred)
-  
-  unique_labels <- unique(labels_true)
-  num_points <- length(labels_true)
-  
-  precision_sum <- 0
-  recall_sum <- 0
-  
-  for (true_label in unique_labels) {
-    true_indices <- labels_true == true_label
-    pred_labels <- labels_pred[true_indices]
-    
-    unique_pred_labels <- unique(pred_labels)
-    
-    for (pred_label in unique_pred_labels) {
-      common_points <- sum(pred_labels == pred_label)
-      precision_sum <- precision_sum + common_points / sum(labels_pred == pred_label)
-      recall_sum <- recall_sum + common_points / sum(labels_true == true_label)
-    }
-  }
-  
-  precision <- precision_sum / num_points
-  recall <- recall_sum / num_points
-  
-  return(list(precision = precision, recall = recall))
-}
-
-precision_recall <- bcubed_precision_recall(selected_data$Cluster, cluster_codes)
-precision <- precision_recall$precision
-recall <- precision_recall$recall
-
-print(paste("B-Cubed Precision:", precision))
-print(paste("B-Cubed Recall:", recall))
-
-# Define function to compute average silhouette for k clusters using silhouette()
-silhouette_score <- function(data, k) {
-  cluster_assignments <- k_medoids_clustering(data, k)
-  ss <- silhouette(cluster_assignments, dist(data))
-  sil <- mean(ss[, 3])
-  return(sil)
-}
-
-# k cluster range from 2 to 10
-k <- 2:10
-
-# Call function for each k value
-avg_sil <- sapply(k, function(k_val) silhouette_score(selected_data[, c('Age', 'Survival.Months')], k_val))
-
-# Plot the results
-plot(k, avg_sil, type = 'b', xlab = 'Number of clusters', ylab = 'Average Silhouette Scores', frame = FALSE)
-
-
-# Create scatter plot with colored clusters
-library(ggplot2)
-
-ggplot(selected_data, aes(x = Age, y = Survival.Months, color = Cluster)) +
-  geom_point() +
-  labs(title = "K-Medoids Clustering", x = "Age", y = "Survival.Months")
-```
 #by the provided code for each classification and clustering you can definitely tell that the classification is the best fit for our dataset since we have high accuracy= 0.9 unlike with the clustering=0.00150338261087447
 
 
