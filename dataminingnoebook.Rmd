@@ -1020,14 +1020,14 @@ cat("BCubed Recall:", recall)
 
 
 
-# Since choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time
-# To find the optimal number of clusters; we have used "fviz_nbclust()" with silhouette method. it
-indicates that the optimal number of clusters is K=3.
+# Since choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time. we employed the silhouette method to guide the selection of the optimal number of clusters
+# we have used "fviz_nbclust()" with silhouette method. it indicates that the optimal number of clusters is K=3.
 ```{r}
 # 2- silhouette method
 #a)fviz_nbclust() with silhouette method using library(factoextra)
 fviz_nbclust(dataset, kmeans, method = "silhouette")+labs(subtitle ="Silhouette method")
 ```
+#The plot consist of a line or curve that represents the silhouette scores for different numbers of clusters (k), The number of clusters in this graph is fixed at three. The ideal number of clusters is shown by the graph's highest point. This indicates the number of clusters that provide the optimal clustering solution and number of clusters that  is often associated with a peak in the silhouette scores
 
 
 
