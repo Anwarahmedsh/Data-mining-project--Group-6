@@ -117,9 +117,36 @@ for (attribute in columns_of_interest) {
 ```
 # as illustrated in the graphs the age attrbuite have no outliers, but the Tumor.Size, Regional.Node.Examined and Reginol.Node.Positive have only Max Outlier meanwhile Survival.Months have only Min Outlier
 
-#detecting outliers is crucial for data integrity, accurate analysis, model performance, and gaining a comprehensive understanding of the data. It helps identify potential data issues,also its important to detect it before starting the data preprocessing step since it can ensure that preprocessing steps are applied appropriately and that the resulting data is suitable
+# we have represented the dataset in the following graphs to provide better understanding:
+
+# histogram for Age attribute
+```{r}
+hist(dataset$Age)
+```
+# A histogram showing the age distribution of women diagnosed with breast cancer. We conclude that breast cancer is more common among women whose ages range from 45 to 50 years (highest frequency). However, it illustrates the wide range of ages, which could cause computation errors and necessitate transformation to bring the ages within a more manageable range.
+
+# pie chart for Race attribute
+```{r}
+library(dplyr)
+tab = dataset$Race %>% table()
+precentages = tab %>% prop.table() %>% round(3)*100
+txt = paste0(names(tab), '\n', precentages, '%')
+pie(tab, labels = txt, main= 'Race')
+```
+# we can see that the race is divided into three sections with their percentage ( as our dataset shows we have white, black , other). The pie chart shows which is the most Race diagnosed with breast cancer. as illustrated, the white race is the highest diagnosed race with 84.8% rate
+
+
+#Scatter Plot
+```{r}
+with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
+```
+# This scatter plot shows the collarition between the tumor size attribute and the Survival months attribute, as when the tumor size is small the survival months is high which indicates that when the tumor size is small the women is more likely to live more months, also it illustrates there is a lot of outliers in the dataset so we might need to delete them.
+
+
+# detecting outliers is crucial for data integrity, accurate analysis, model performance, and gaining a comprehensive understanding of the data. It helps identify potential data issues,also its important to detect it before starting the data preprocessing step since it can ensure that preprocessing steps are applied appropriately and that the resulting data is suitable
 
 #here we analyzed their occurrences for specific variables of the dataset, and deleted them
+#here we found that the age has outliers not like what the boxplot indctated, for better results we chose to remove them
 ```{r}
 #install.packages("outliers")
 library(outliers)
@@ -162,33 +189,6 @@ dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
 dataset = dataset[dataset$Survival.Months != outmonth ,]
 nrow(dataset)
 ```
-
-
-# we have represented the dataset in the following graphs to provide better understanding:
-
-# histogram for Age attribute
-```{r}
-hist(dataset$Age)
-```
-# A histogram showing the age distribution of women diagnosed with breast cancer. We conclude that breast cancer is more common among women whose ages range from 45 to 50 years (highest frequency).
-
-# pie chart for Race attribute
-```{r}
-library(dplyr)
-tab = dataset$Race %>% table()
-precentages = tab %>% prop.table() %>% round(3)*100
-txt = paste0(names(tab), '\n', precentages, '%')
-pie(tab, labels = txt, main= 'Race')
-```
-# we can see the race is divided into three sections with their percentage ( as our dataset shows we have white, black , other). The pie chart shows which is the most Race diagnosed with breast cancer. as illustrated, the white race is the highest diagnosed race with 84.8% rate
-
-
-#Scatter Plot
-```{r}
-with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
-```
-# This scatter plot shows the collarition between the tumor size attribute and the Survival months attribute, as when the tumor size is small the survival months is high which indicates that when the tumor size is small the women is more likely to live more months, also it illustrates there is a lot of outliers in the dataset so we might need to delete them.
-
 
 
 # Data preprocessing:
