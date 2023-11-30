@@ -650,7 +650,7 @@ co_resultsu <- confusionMatrix(resultsn)
 print(co_resultsu)
 sensitivity(as.table(co_resultsu))
 specificity(as.table(co_resultsu))
-
+precision(as.table(co_resultsu))
 accsn <- co_resultsu$overall["Accuracy"]
 accsn
 ```
