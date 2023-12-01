@@ -869,23 +869,25 @@ reliability and generalization capabilities.
 # Clustering is unsupervised learning so there is no class label, it is the task of dividing the unlabeled data or data points into different clusters such that similar data points fall in the same cluster than those which differ from the others. In simple words, the aim of the clustering process is to segregate groups with similar traits and assign them into clusters.
 # in this project we used the K-means algorithm, it is a centroid-based clustering algorithm. it works randomly selecting K objects as the centroids of K clusters. Then, it assigns the other objects to the nearest cluster to them by measuring the distance between the centroid and each object. Consequently, updates the clusters and compute the new centroids, then repeats until no significant change of clusters occurs. For the approach to work, numerical data and prior knowledge of the number of clusters K are required, K-Means works well with our dataset because we converted every entry to a numeric value in the stage of preprocessing.
 # K-Means clustering was applied with the assistance of the the R packages and packages listed below:
-# factoextra package: Extract and Visualize the Results of Multivariate Data Analyses.
-# cluster package: provides methods for Cluster analysis.
-# NbClust package: provides 30 indexes for determining the optimal number of clusters in data set and offers the best clustering scheme from different results.
-# set.seed(): Create reproducible results
-# kmeans(): Clusters data based on similarity.
-# fviz_cluster(): Visualize clustering results.
-# silhouette(): Find the average for each and all clusters.
-# fviz_silhouette(): Visualize the silhouette information.
-# fviz_nbclust(): Determining the optimal number of clusters.
+#factoextra package: Extract and Visualize the Results of Multivariate Data Analyses.
+#cluster package: provides methods for Cluster analysis.
+#NbClust package: provides 30 indexes for determining the optimal number of clusters in data set and offers the best clustering scheme from different results.
+#set.seed(): Create reproducible results
+#kmeans(): Clusters data based on similarity.
+#fviz_cluster(): Visualize clustering results.
+#silhouette(): Find the average for each and all clusters.
+#fviz_silhouette(): Visualize the silhouette information.
+#fviz_nbclust(): Determining the optimal number of clusters.
 
 
 # We will experiment with the following three values of k: (3,4,5). We will compute the average silhouette ,total within-cluster sum of square and the BCubed metrics (precision and recall) for each K.
 
 
 # Clustr of size=3
-# this number was chosen after applying the silhouette method which shows that 3 is the optimal number for clustring
-# This code applies the k-means clustering algorithm on the dataset, and then evaluates the clustering results using various metrics, including silhouette analysis and BCubed metrics.The BCubed metrics provide an evaluation of the clustering results by comparing them to ground truth label, assuming they are available in the 'datawithcl' dataset.
+#this number was chosen after applying the silhouette method which shows that 3 is the optimal number for clustring
+#This code applies the k-means clustering algorithm on the dataset, and then evaluates the clustering results using various metrics, including silhouette analysis and BCubed metrics.The BCubed metrics provide an evaluation of the clustering results by comparing them to ground truth label, assuming they are available in the 'datawithcl' dataset.
+
+#here we load the necessary librarys, removing the class label and take copy of the old dataset
 ```{r}
 library(factoextra)
 library(NbClust)
@@ -895,10 +897,9 @@ datawithcl<-dataset #dataset with the class label) # dataset with a class label
 dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
 str(dataset)
 ``` 
-#here we load the necessary librarys, removing the class label and take copy of the old dataset
 
-```{r}
 #converting intger columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
+```{r}
 numeric_dataset = dataset
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
 numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
@@ -925,25 +926,27 @@ fviz_cluster(kmns, data = dataset, geom = "point",
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
 ```
+#
 
-```{r}
 #calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
+```{r}
 #Cluster Validation
 library(cluster)
 #average for each cluster
 avg_sil <- silhouette(kmns$cluster,dist(dataset))
 fviz_silhouette(avg_sil)
 ```
-```{r}
+
 #calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
+```{r}
 # Calculate the WCSS
 wcss <- sum(kmns$withinss)
 
 # Print the WCSS
 print(wcss)
 ```
-```{r}
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
+```{r}
 #BCubed Metrics
 cluster_assignments <- kmns$cluster
 ground_truth_labels <- datawithcl$Status
