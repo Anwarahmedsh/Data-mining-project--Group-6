@@ -654,7 +654,6 @@ precision(as.table(co_resultsu))
 accsn <- co_resultsu$overall["Accuracy"]
 accsn
 ```
-```
 
 The following is a 20% testing and 80% Training information gain ratio
 created where the classification label is known (pre-classified) for
@@ -888,16 +887,17 @@ reliability and generalization capabilities.
 # this number was chosen after applying the silhouette method which shows that 3 is the optimal number for clustring
 # This code applies the k-means clustering algorithm on the dataset, and then evaluates the clustering results using various metrics, including silhouette analysis and BCubed metrics.The BCubed metrics provide an evaluation of the clustering results by comparing them to ground truth label, assuming they are available in the 'datawithcl' dataset.
 ```{r}
-
 library(factoextra)
 library(NbClust)
 library(cluster)
 
 datawithcl<-dataset #dataset with the class label) # dataset with a class label
 dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
-
 str(dataset)
+``` 
+#here we load the necessary librarys, removing the class label and take copy of the old dataset
 
+```{r}
 #converting intger columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
 numeric_dataset = dataset
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
@@ -911,9 +911,10 @@ numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
 numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
 numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
 str(numeric_dataset)
+```
 
 #appling the k-means clustering algorithm (kmeans function) to the preprocessed dataset with three clusters (centers = 3). The maximum number of iterations is set to 140, and the algorithm used is "Lloyd"which is an iterative method used to solve the k-means clustering problem. The algorithm minimizes the sum of squared distances between data points and the centroids (mean points) of their respective clusters. and The results are stored in the variable 'kmns'
-
+```{r}
 kmns <- kmeans(dataset, 3, iter.max = 140 , algorithm="Lloyd", nstart=100) 
 kmns
 
@@ -923,25 +924,25 @@ library(factoextra)
 fviz_cluster(kmns, data = dataset, geom = "point", 
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
+```
 
-
-
+```{r}
 #calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
 #Cluster Validation
 library(cluster)
 #average for each cluster
 avg_sil <- silhouette(kmns$cluster,dist(dataset))
 fviz_silhouette(avg_sil)
-
-
+```
+```{r}
 #calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
 # Calculate the WCSS
 wcss <- sum(kmns$withinss)
 
 # Print the WCSS
 print(wcss)
-
-
+```
+```{r}
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
 #BCubed Metrics
 cluster_assignments <- kmns$cluster
@@ -971,7 +972,6 @@ recall <- metrics$recall
 
 cat("BCubed Precision:", precision)
 cat("BCubed Recall:", recall)
-
 ```
 
 #Clustr of size=4
