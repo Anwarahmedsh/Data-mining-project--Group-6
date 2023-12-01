@@ -936,6 +936,7 @@ library(cluster)
 avg_sil <- silhouette(kmns$cluster,dist(dataset))
 fviz_silhouette(avg_sil)
 ```
+#the graph shows an average silhouette width of 0.38, it falls in the moderate range. It suggests that there is a reasonable level of separation and coherence among the clusters, but there may still be some overlap or ambiguity in the clustering results. 
 
 #calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
 ```{r}
@@ -1164,29 +1165,11 @@ cat("BCubed Recall:", recall)
 # Since choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time. we employed the silhouette method to guide the selection of the optimal number of clusters
 # we have used "fviz_nbclust()" with silhouette method. it indicates that the optimal number of clusters is K=3.
 ```{r}
-# 2- silhouette method
+# silhouette method
 #a)fviz_nbclust() with silhouette method using library(factoextra)
 fviz_nbclust(dataset, kmeans, method = "silhouette")+labs(subtitle ="Silhouette method")
 ```
 # The plot consist of a line or curve that represents the silhouette scores for different numbers of clusters (k), The number of clusters in this graph is fixed at three. The ideal number of clusters is shown by the graph's highest point. This indicates the number of clusters that provide the optimal clustering solution and number of clusters that  is often associated with a peak in the silhouette scores
-
-
-
-```{r}
-
-```
-
-```{r}
-
-
-```
-
-```{r}
-
-
-
-```
-
 
 
 # Evaluation and Comparison
@@ -1208,7 +1191,7 @@ fviz_nbclust(dataset, kmeans, method = "silhouette")+labs(subtitle ="Silhouette 
 |                    | +-----------------------+------------------------------+------------------------------+-----------------------------+       |
 +--------------------+-----------------------------------------------------------------------------------------------------------------------------+
 | **Clustering**     | +----------------------------------------+--------------------------+-------------------------+---------------------------+ |
-|                    | |                                        | K=4                      | K=5                     | K=6                       | |
+|                    | |                                        | K=3                      | K=4                     | K=5                       | |
 |                    | +========================================+==========================+=========================+===========================+ |
 |                    | | **Average silhouette width**           |                          |                         |                           | |
 |                    | +----------------------------------------+--------------------------+-------------------------+---------------------------+ |
