@@ -949,6 +949,8 @@ wcss <- sum(kmns$withinss)
 # Print the WCSS
 print(wcss)
 ```
+#the WCSS value is 12848.44. The higher the WCSS value, the greater the dispersion of data points within each cluster, indicating less compact and well-separated clusters.
+
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
 ```{r}
 #BCubed Metrics
@@ -980,6 +982,13 @@ recall <- metrics$recall
 cat("BCubed Precision:", precision)
 cat("BCubed Recall:", recall)
 ```
+#The precision score of 0.7567 suggests that, on average, around 75.67% of the data points assigned to a cluster are correctly assigned, reflecting the accuracy of the algorithm in clustering the data.
+#The recall score of 0.5227 indicates that, on average, approximately 52.27% of the data points that should have been assigned to a cluster are indeed captured by the algorithm, showcasing its ability to identify relevant data points within each cluster. These results demonstrate a trade-off between precision and recall, where the algorithm achieves good precision but sacrifices some recall. 
+
+
+
+
+
 
 #Clustr of size=4
 #this number was chosen randomlly
