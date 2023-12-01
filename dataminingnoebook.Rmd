@@ -301,7 +301,7 @@ For example, looking at "Tumor.Size" and "Reginol.Node.Positive," the correlatio
 #feature selection 
 other way to choose the relevant attributes to the dataset, we performed this feature selection if you want to check it out, although we think the chi square is better \# ensure the results are repeatable
 
-```{r}
+
 set.seed(7)
 # load the library
 library(mlbench)
@@ -321,7 +321,7 @@ rfe_result <- rfe(features, target, sizes = 1:ncol(features), rfeControl = ctrl)
 # Print the RFE result
 print(rfe_result)
 plot(rfe_result)
-```
+
 
 This feature selection graphical representation shows the higher-ranked features that considered more important or relevant for predicting the target variable which are: Survival.Months, Reginol.Node.Positive, X6th.Stage, Progesterone. Status, Age.,this helps choosing which features to include or exclude . so we can improve model efficiency, reduce overfitting, and enhance interpretability by focusing on the most relevant features for the task at hand.
 
@@ -367,9 +367,6 @@ printcp(dataset.id3)  # Display cp table for pruning
 rpart.plot(dataset.id3)
 ```
 
-```{r}
-text(dataset.id3)
-```
 
 ```{r}
 # Make predictions on the test set
