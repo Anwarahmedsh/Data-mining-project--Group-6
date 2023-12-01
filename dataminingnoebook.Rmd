@@ -926,7 +926,7 @@ fviz_cluster(kmns, data = dataset, geom = "point",
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
 ```
-in the graph above you can see the clusters overlapping which could be because of the nature of the data since most real-world medical datasets have inherently overlapping information, which could be best explained by allowing one sample belong to more than one cluster.
+#in the graph above you can see the clusters overlapping which could be because of the nature of the data since most real-world medical datasets have inherently overlapping information, which could be best explained by allowing one sample belong to more than one cluster.
 In our dataset we have specific information about breast cancer specially the tumor such as tumor size, N stage, 6th stage, T stage, differentiation and grade. These attributes can contribute to why the overlapping happened. you can notice the high density in cluster 3 as it has  2705 samples and the lowest density is cluster 1  as it has 529 samples.
 The within-cluster sum of squares measures the variability or dispersion of data points within each cluster. Cluster 1 has the lowest within-cluster sum of squares (2468.133), followed by cluster 2 (2558.139), and cluster 3 has the highest within-cluster sum of squares (7822.169). This suggests that data points within cluster 1 and cluster 2 are more tightly grouped or less dispersed compared to cluster 3, which has more variability within its data points.
 based on the within-cluster sum of squares, we can infer that clusters 1 and 2 have relatively more similar data points within each cluster, whereas cluster 3 has more diverse or dissimilar data points within the cluster.
