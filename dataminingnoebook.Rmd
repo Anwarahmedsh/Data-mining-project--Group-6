@@ -984,9 +984,9 @@ library(cluster)
 
 datawithcl<-dataset #dataset with the class label) # dataset with a class label
 dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
-
 str(dataset)
-
+```
+```{r}
 #converting intger columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
 numeric_dataset = dataset
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
@@ -1005,16 +1005,17 @@ str(numeric_dataset)
 
 kmns <- kmeans(dataset, 4, iter.max = 140 , algorithm="Lloyd", nstart=100) 
 kmns
-
+```
+```{r}
 #using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
 
 library(factoextra)
 fviz_cluster(kmns, data = dataset, geom = "point", 
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
+```
 
-
-
+```{r}
 #calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
 #Cluster Validation
 library(cluster)
