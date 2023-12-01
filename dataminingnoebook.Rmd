@@ -33,11 +33,11 @@ The goal of this project is to develop a machine learning model that goes beyond
 #Goal:  the clustering task aims to uncover patterns and subgroups within the patient population based on shared characteristics Utilizing clinical data such as T-Stage, age, and N-Stage. This enables a more nuanced understanding of the heterogeneity of breast cancer, facilitating the identification of specific patient profiles that may have similar prognostic implications.
 
 # Data:
-# The source of the dataset
-# obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL: https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
+# The source of the dataset:
+obtained from the 2017 November update of the SEER Program of the NCI, from kaggle website, URL: https://www.kaggle.com/datasets/reihanenamdari/breast-cancer
 
-# Dataset Description
-# General Information 
+# Dataset Description:
+#General Information 
 
 - Number of attributes : 16
 - Number of objects : 4025 
@@ -868,7 +868,7 @@ reliability and generalization capabilities.
 # Clustring
 # Clustering is unsupervised learning so there is no class label, it is the task of dividing the unlabeled data or data points into different clusters such that similar data points fall in the same cluster than those which differ from the others. In simple words, the aim of the clustering process is to segregate groups with similar traits and assign them into clusters.
 # in this project we used the K-means algorithm, it is a centroid-based clustering algorithm. it works randomly selecting K objects as the centroids of K clusters. Then, it assigns the other objects to the nearest cluster to them by measuring the distance between the centroid and each object. Consequently, updates the clusters and compute the new centroids, then repeats until no significant change of clusters occurs. For the approach to work, numerical data and prior knowledge of the number of clusters K are required, K-Means works well with our dataset because we converted every entry to a numeric value in the stage of preprocessing.
-# K-Means clustering was applied with the assistance of the the R packages and packages listed below:
+#K-Means clustering was applied with the assistance of the the R packages and packages listed below:
 #factoextra package: Extract and Visualize the Results of Multivariate Data Analyses.
 #cluster package: provides methods for Cluster analysis.
 #NbClust package: provides 30 indexes for determining the optimal number of clusters in data set and offers the best clustering scheme from different results.
