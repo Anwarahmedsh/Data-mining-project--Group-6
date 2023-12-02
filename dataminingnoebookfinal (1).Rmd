@@ -1,0 +1,1699 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+#importing dataset
+
+```{r}
+setwd("C:/Users/saran/OneDrive")
+dataset = read.csv('BreastCancer1.csv')
+str(dataset)
+library(Hmisc)
+describe(dataset)
+summary(dataset)
+```
+
+# problem
+
+Breast cancer, a leading cause of global cancer-related deaths, presents
+a challenge in tailoring treatments due to its heterogeneity in nature,
+but homogeneity in treatment due to the fact that the current treatment
+landscape often lacks personalized approaches, primarily because of a
+limited emphasis on prognosis assessment. This oversight becomes
+glaringly evident in the observed survival rate disparities, such as the
+approximate 90% survival rate for caucasian women compared to the 80%
+rate for African American women. By focusing on prognosis, we aim to
+bridge the gap in treatment personalization and resource allocation.
+This is not merely a statistical concern but a pressing matter of
+healthcare equity and the optimal utilization of resources. The goal of
+this project is to develop a machine learning model that goes beyond
+traditional diagnostic approaches and provides a nuanced understanding
+of individual patient prognosis. By identifying factors contributing to
+higher risk of death, we aspire to enhance treatment personalization,
+ensuring that resources are allocated more efficiently to patients who
+are at a greater risk. This approach not only addresses the disparities
+in survival rates among different demographic groups but also
+contributes to a more equitable and effective breast cancer treatment
+landscape on a global scale.
+
+# Data Mining Task :
+
+# Data Mining Tasks: Classification and Clustering
+
+This project involves two primary data mining tasks: classification and
+clustering, each contributing to the overarching goal of helping
+healthcare professionals to make informed decision, and enhancing
+treatment plans, improved counseling, and resource allocation towards
+patients who have a higher risk of death.
+
+# 1. Classification:
+
+Class Attribute: The class attribute for the classification task is the
+"patient status," which is binary and categorized as either "alive" or
+"dead."
+
+Goal: The classification model can be used to predict whether a
+patient's status will be "alive" or dead". This will serve as a valuable
+tool for healthcare professionals to make informed decision regarding
+patient careuch as early intervention strategies , since these
+predictions can be used to identify risk factors for breast cancer
+death, which could result in developing more optimized strategies and
+treatments.
+
+# 2. Clustering:
+
+Goal: the clustering task aims to uncover patterns and subgroups within
+the patient population based on shared characteristics Utilizing
+clinical data such as T-Stage, age, and N-Stage. This enables a more
+nuanced understanding of the heterogeneity of breast cancer,
+facilitating the identification of specific patient profiles that may
+have similar prognostic implications.
+
+# Data:
+
+The source of the dataset: obtained from the 2017 November update of the
+SEER Program of the NCI, from kaggle website, URL:
+<https://www.kaggle.com/datasets/reihanenamdari/breast-cancer>
+
+# Dataset Description:
+
+# General Information
+
+-   Number of attributes : 16
+-   Number of objects : 4024
+-   The class name : status.
+
+```{r}
+#Number of rows
+nrow(dataset)
+#Number of columns
+ncol(dataset)
+```
+
+-   Types of attribute :
+
+    | **A ttribute name**    | **Description**                                                                                                                       | **Data type**      | **Possible values**                                                                            |
+    |:-----------|:----------------------------|:-----------|:------------------|
+    | Age                    | age of the patients                                                                                                                   | numeric            | between 30 - 70                                                                                |
+    | Race                   | classification of people based on their physical characteristics such as skin color                                                   | nominal            | white, black or other                                                                          |
+    | Marital status         | refers to wether the patient is married ,single or divorced etc                                                                       | nominal            | Divorced ,Married, Separated, Single , Widowed                                                 |
+    | T stage                | describe the tumors size and if it has spread to the skin or to the chest wall under the breast. Higher T numbers mean a larger tumor | ordinal            | T1,T2,T3,T4                                                                                    |
+    | N stage                | indicates whether the cancer has spread to lymph nodes near the breast                                                                | ordinal            | N1 ,N2,N3                                                                                      |
+    | 6th stage              | describes invasive breast cancer                                                                                                      | Ordinal            | IIA , IIB , IIIA , IIIB , IIIC                                                                 |
+    | Differe ntiation       | describes how well developed the tumour cells are and how cancer cells are organised in the tumour tissue                             | ordinal            | Moderately dif ferentiated , Poorly dif ferentiated ,U ndif ferentiated , Well dif ferentiated |
+    | Grade                  | depends on what the cells look like, lower grade indicates slower-growing cancer unlike higher grades                                 | ordinal            | 1,2 ,3, 4                                                                                      |
+    | A stage                | Regional : aneoplasm that has extended, Distant : aneoplasm that has spread to parts of the body remote from                          | as ymmetric binary | Distant, Regional                                                                              |
+    | Tumor size             | Each indicates exact size of the tumor in millimeters                                                                                 | ordinal            | FROM 1 TO 140                                                                                  |
+    | Estrogen status        | The cancer is estrogen receptor-positive if it has receptors for estrogen                                                             | as ymmetric binary | Negative, Positive                                                                             |
+    | Prog esterone status   | The cancer is progesterone receptor-positive if it has progesterone receptors.                                                        | as ymmetric binary | Negative , Positive                                                                            |
+    | Regional Node Examined | the number of the regional node that have been examined                                                                               | numeric            | FROM 1 TO 61                                                                                   |
+    | Reginol Node Positive  | the number of the regional node that heve been confirmed to have cancer                                                               | numeric            | FROM 1 TO 46                                                                                   |
+    | Survival Months        | It predicts the number of months to live based on the patient state                                                                   | numeric            | FROM 1 TO 107                                                                                  |
+    | Status                 | describes weather the patient is dead or alive                                                                                        | as ymmetric binary | Dead , alive                                                                                   |
+
+# Moving forward, we applied some statistical measures on the dataset to better understand them. The following code show the process:
+
+#statistical summaries
+
+```{r}
+summary(dataset)
+var(dataset)
+var(dataset$Tumor.Size)
+var(dataset$Regional.Node.Examined)
+var(dataset$Reginol.Node.Positive)
+var(dataset$Survival.Months)
+var(dataset$Age)
+```
+
+# Boxplot
+
+# here we have a graphic display of the five-number summary and the outliers
+
+```{r}
+# Select the columns that have numercal values
+columns_of_interest <- c("Age", "Tumor.Size", "Regional.Node.Examined", "Reginol.Node.Positive", "Survival.Months")
+data_of_interest <- dataset[, columns_of_interest]
+
+# Create boxplots for each selected attribute
+par(mfrow = c(2, 3))  # Adjust the layout as needed
+
+for (attribute in columns_of_interest) {
+  boxplot(data_of_interest[[attribute]], main = attribute)
+}
+```
+
+as illustrated in the graphs the age attrbuite have no outliers, but the
+Tumor.Size, Regional.Node.Examined and Reginol.Node.Positive have only
+Max Outlier meanwhile Survival.Months have only Min Outlier there is a
+lot of outliers in tumor size ,Regional.Node.Examined and
+Reginol.Node.Positive. so it needs to be deleted to remove the noise we
+found that the box plot is not the best method for detecting the
+outliers, so we chose a diffrent method as you can
+
+we have represented the dataset in the following graphs to provide
+better understanding:
+
+# histogram for Age attribute
+
+```{r}
+hist(dataset$Age)
+```
+
+A histogram showing the age distribution of women diagnosed with breast
+cancer. We conclude that breast cancer is more common among women whose
+ages range from 45 to 50 years (highest frequency). However, it
+illustrates the wide range of ages, which could cause computation errors
+and necessitate transformation to bring the ages within a more
+manageable range.
+
+# pie chart for Race attribute
+
+```{r}
+library(dplyr)
+tab = dataset$Race %>% table()
+precentages = tab %>% prop.table() %>% round(3)*100
+txt = paste0(names(tab), '\n', precentages, '%')
+pie(tab, labels = txt, main= 'Race')
+```
+
+we can see that the race is divided into three sections with their
+percentage ( as our dataset shows we have white, black , other). The pie
+chart shows which is the most Race diagnosed with breast cancer. as
+illustrated, the white race is the highest diagnosed race with 84.8%
+rate
+
+# Scatter Plot
+
+```{r}
+with(dataset, plot(Tumor.Size, Survival.Months, col = "blue", pch = 16))
+```
+
+This scatter plot shows the collarition between the tumor size attribute
+and the Survival months attribute, as when the tumor size is small the
+survival months is high which indicates that when the tumor size is
+small the women is more likely to live more months, also it illustrates
+there is a lot of outliers in the dataset so we might need to delete
+them.
+
+# detecting outliers
+
+detecting outliers is crucial for data integrity, accurate analysis,
+model performance, and gaining a comprehensive understanding of the
+data. It helps identify potential data issues,also its important to
+detect it before starting the data preprocessing step since it can
+ensure that preprocessing steps are applied appropriately and that the
+resulting data is suitable
+
+here we analyzed their occurrences for specific variables of the
+dataset, and deleted them here we found that the age has outliers not
+like what the boxplot indctated, for better results we chose to remove
+them and relay on this method instead of boxplot
+
+```{r}
+#install.packages("outliers")
+library(outliers)
+#outliers of age
+outage= outlier(dataset$Age)
+print(outage)
+#number of rows that have the outlier 
+table(dataset$Age == outage )
+
+#outliers of tumor size
+outTumorSize = outlier(dataset$Tumor.Size)
+print(outTumorSize)
+#number of rows that has the outlier
+table(dataset$Tumor.Size == outTumorSize)
+
+#outliers of Regional Node Examined
+outNodeExamined = outlier(dataset$Regional.Node.Examined)
+print(outNodeExamined)
+#number of rows that has the outlier
+table(dataset$Regional.Node.Examined == outNodeExamined )
+
+#outliers of Reginol Node Positive
+outNodepositive = outlier(dataset$Reginol.Node.Positive)
+print(outNodepositive)
+#number of rows that has the outlier
+table(dataset$Reginol.Node.Positive == outNodepositive )
+
+#outliers of Survival Months
+outmonth = outlier(dataset$Survival.Months)
+print(outmonth)
+#number of rows that has the outlier 
+table(dataset$Survival.Months==outmonth)
+```
+
+```{r}
+#delete the outliers
+dataset = dataset[dataset$Age != outage ,]
+dataset = dataset[dataset$Tumor.Size != outTumorSize ,]
+dataset = dataset[dataset$Regional.Node.Examined != outNodeExamined ,]
+dataset = dataset[dataset$Reginol.Node.Positive != outNodepositive ,]
+dataset = dataset[dataset$Survival.Months != outmonth ,]
+nrow(dataset)
+```
+
+# Data preprocessing:
+
+In the data preprocessing, we applied various techniques to enhance the
+dataset's suitability for machine learning models. We did both data
+cleaning and data transformation.\
+For the data cleaning : we have already removed the outliers , we
+checked if our dataset have duplicated rows and null values or not but
+it didnt have any. For data transformation: -Normalization was performed
+on numeric attributes to ensure a consistent scale between 0 and 1.
+-Encoding was performed on categorical variables, converting them into a
+numeric format, facilitating model training.\
+-Chi-square tests were conducted to evaluate the associations between
+each categorical attribute and the "Status" variable, revealing
+significant connections. -Correlation analysis generated a matrix for
+numeric variables, to understand relationships between them.
+
+# Data cleaning codes:
+
+checking if there is any missing value or duplicated rows, this allow us
+to identify and handle data quality issues early in the analysis process
+
+```{r}
+is.na(dataset)
+sum(is.na(dataset))
+sum(duplicated(dataset))
+#removing duplicate
+dataset= unique(dataset)
+sum(duplicated(dataset))
+#number of rows after deleting dup
+nrow(dataset)
+nrow(dataset)
+```
+
+we did not have any missing valuse but we have a duplicated row so we
+deleted it.
+
+# Data transformation codes:
+
+# Normalization:
+
+we had numeric attributes might be measured in different units or have a
+different range of values (Age, tumor size, Regional Node Examined,
+Regional Node Positive, Survival months). so we applied Normalization to
+adjust the quantities of each attribute so that they all fit into the
+same scale and they all have values between 0 and 1.
+
+```{r}
+#Define function normalize
+normalize <- function(x) {return ((x - min(x)) / (max(x) - min(x)))}
+#Call normalize function
+dataset$Age<-normalize(dataset$Age)
+dataset$Tumor.Size<-normalize(dataset$Tumor.Size)
+dataset$Regional.Node.Examined<-normalize(dataset$Regional.Node.Examined)
+dataset$Reginol.Node.Positive<-normalize(dataset$Reginol.Node.Positive)
+dataset$Survival.Months<-normalize(dataset$Survival.Months)
+#showing normalized columns
+print(dataset)
+```
+
+# Encoding
+
+The goal of this code is to convert categorical variables in the dataset
+into a numeric format. This process is called encoding. this making the
+dataset more accessible and suitable for machine learning algorithms
+that require numerical input for training and making predictions.
+
+```{r}
+dataset$Race = factor(dataset$Race,levels = c("White","Black", "Other"), labels=c(1,2,3))
+dataset$Marital.Status = factor(dataset$Marital.Status,levels = c("Married","Divorced","Separated","Single ","Widowed"), labels=c(1,2,3,4,5))
+dataset$differentiate = factor(dataset$differentiate,levels = c("Well differentiated","Moderately differentiated", "Poorly differentiated","Undifferentiated"), labels=c(1,2,3,4))
+dataset$Grade= factor(dataset$Grade,levels = c(1 , 2 ,3 ," anaplastic; Grade IV"), labels=c(1,2,3,4))
+dataset$X6th.Stage = factor(dataset$X6th.Stage,levels = c("IIA","IIIA", "IIB","IIIB","IIIC"), labels=c(1,2,3,4,5))
+dataset$Status = factor(dataset$Status,levels = c("Dead","Alive"), labels=c(0,1))
+dataset$Estrogen.Status = factor(dataset$Estrogen.Status ,levels = c("Negative","Positive"), labels=c(0,1))
+dataset$Progesterone.Status = factor(dataset$Progesterone.Status ,levels = c("Negative","Positive"), labels=c(0,1))
+dataset$A.Stage	 = factor(dataset$A.Stage	,levels = c("Regional","Distant"), labels=c(0,1))
+dataset$T.Stage	 = factor(dataset$T.Stage	,levels = c("T1","T2","T3","T4"), labels=c(1,2,3,4))
+dataset$N.Stage	 = factor(dataset$N.Stage	,levels = c("N1","N2","N3"), labels=c(1,2,3))
+View(dataset)
+```
+
+```{r}
+is.na(dataset)
+sum(is.na(dataset))
+```
+
+# the chi-square
+
+this code is conducting a series of chi-square tests to assess the
+association between each categorical attribute in the dataset and the
+"Status" variable.
+
+```{r}
+# Get the column names of the dataset
+column_names <- colnames(dataset)
+
+# Perform chi-square test for each attribute
+for (attribute in column_names) {
+  if (attribute != "Status") {
+    # Create a contingency table
+    contingency_table <- table(dataset[[attribute]], dataset$Status)
+    
+    # Perform chi-square test
+    result <- chisq.test(contingency_table)
+    
+    # Print the attribute name and the result
+    cat("Attribute:", attribute, "\n")
+    print(result)
+    cat("\n")
+  }
+}
+```
+
+the chi-square test results indicate that most of the attributes have a
+significant association with the variable being tested. These attributes
+include Age, Race, Marital.Status, T.Stage, N.Stage, X6th.Stage,
+differentiate, Grade, A.Stage, Estrogen.Status, Progesterone.Status,
+Regional.Node.Examined, Reginol.Node.Positive, Tumor.Size,
+Survival.Months, and Status. The low p-values provide strong evidence to
+reject the null hypothesis of no association between these attributes
+and the variable. #Since they are highly correlated there is no need to
+perform feature selection
+
+# correlation analysis
+
+This code extracts numeric attributes from the dataset, calculates the
+correlation matrix for those numeric variables, and then prints the
+correlation matrix.
+
+```{r}
+numeric_datas <- dataset[, sapply(dataset, is.numeric)]
+
+# Calculate the correlation matrix for numeric variables
+correlation_matrix <- cor(numeric_datas)
+
+# Print the correlation matrix
+print(correlation_matrix)
+
+```
+
+The matrix shows the correlation coefficients between pairs of
+variables. The values range from -1 to 1, where -1 indicates a perfect
+negative correlation, 1 indicates a perfect positive correlation, and 0
+indicates no correlation. For example, looking at "Tumor.Size" and
+"Reginol.Node.Positive," the correlation coefficient is 0.245566,
+indicating a positive correlation which means that the larger tumor size
+the greater number of nodes affected . In contrast,
+"Reginol.Node.Positive" and "Survival.Months" have a correlation
+coefficient of -0.13344498 which means the greater number of affected
+nodes the fewer months to live
+
+# feature selection
+
+other way to choose the relevant attributes to the dataset, we performed
+this feature selection if you want to check it out, although we think
+the chi square is better \# ensure the results are repeatable
+
+# this the code but we didn't apply it
+
+set.seed(7) library(mlbench) library(caret)
+
+features \<- dataset[, -c(2 , 3 ,16)] \# Exclude non-numeric and target
+variable columns target \<- dataset\$Status
+
+ctrl \<- rfeControl(functions = rfFuncs, method = "cv", number = 10) \#
+10-fold cross-validation
+
+rfe_result \<- rfe(features, target, sizes = 1:ncol(features),
+rfeControl = ctrl)
+
+print(rfe_result) plot(rfe_result)
+
+This feature selection graphical representation shows the higher-ranked
+features that considered more important or relevant for predicting the
+target variable which are: Survival.Months, Reginol.Node.Positive,
+X6th.Stage, Progesterone. Status, Age.,this helps choosing which
+features to include or exclude . so we can improve model efficiency,
+reduce overfitting, and enhance interpretability by focusing on the most
+relevant features for the task at hand.
+
+# Data mining technique
+
+# Classification
+
+For classification applied three different classification algorithms ID3
+with information gain, CART with Gini index, and C4.5 (C5.0) with gain
+ratio for each size ( 70% 30% , 60% 40% , 80% 20% ). . -For the ID3
+algorithm, we utilized the rpart package with the information split
+method, and the resulting decision tree was visualized and evaluated
+using confusion matrix, sensitivity, specificity, precision, and
+accuracy. -For the CART algorithm, we used the gini split method with
+the rpart package, visualized the decision tree, and evaluated the
+model's performance using confusion matrix, sensitivity, specificity,
+precision, and accuracy. -For the C4.5 (C5.0) algorithm, we employed the
+C50 package and visualized the decision tree using the party and
+partykit packages, then evaluated using confusion matrix, sensitivity,
+specificity, precision, and accuracy.
+
+# Tree 1 70% training and 30% testing using infomation gain
+
+```{r}
+dataset$Status <- factor(dataset$Status)
+# Set the random seed for reproducibility
+set.seed(1234)
+
+# Split the dataset into training 70% and testing 30% subsets
+ind <- sample(1:nrow(dataset), size = floor(0.7 * nrow(dataset)), replace = FALSE)
+trainData <- dataset[ind,]
+testData <- dataset[-ind,]
+myFormula <- Status ~ Age + Marital.Status + Race + T.Stage + N.Stage + X6th.Stage + differentiate + Grade + A.Stage + Tumor.Size + Estrogen.Status + Progesterone.Status + Reginol.Node.Positive + Regional.Node.Examined + Survival.Months 
+```
+
+```{r}
+# Load the necessary library
+install.packages('party')
+library(party)
+install.packages("rpart")
+install.packages('rpart.plot')
+library('rpart.plot')
+library(rpart)
+#tree 1 for information gain 
+# Using ID3 with rpart
+dataset.id3 <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "information"))
+printcp(dataset.id3)  # Display cp table for pruning
+```
+
+```{r}
+# Plot the decision tree1
+rpart.plot(dataset.id3)
+```
+
+```{r}
+# Make predictions on the test set
+testPred <- predict(dataset.id3, newdata = testData, type = "class")
+result <- table(testPred, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+install.packages("caret")
+install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+co_result <- confusionMatrix(result)
+print(co_result)
+sensitivity(as.table(co_result))
+specificity(as.table(co_result))
+precision(as.table(co_result))
+acc <- co_result$overall["Accuracy"]
+acc
+```
+
+The formula myFormula is used to define the target variable (Status) and
+predictor variables for the classification. We made decision tree
+classification using the ID3 algorithm (information gain) on a dataset
+then we split the dataset into 70% training and 30% testing. For
+visualization the tree In this case, the output lists the variables that
+are actually used in constructing the classification tree which are the
+following variables are used: Age, Estrogen.Status,
+Reginol.Node.Positive, Survival.Months to know the status (0 dead, 1
+alive). Survival months has the highest Information Gain so it's chosen
+as the splitting criterion at each node of the decision tree.
+
+For the Predictions , they are made on the test set using the trained
+decision tree. we calculated confusion matrix, sensitivity, specificity,
+precision, and overall accuracy . And the accuracy was high(88.4%) which
+indicates that a significant portion of the predictions made by the
+model match the actual outcomes in the test dataset as well as the other
+measurments.
+
+# Tree 2 70% training and 30% testing using gini index
+
+```{r}
+# Using CART with rpart
+#tree 2 using gini index
+dataset.cart <- rpart(myFormula, data = trainData, method = "class", parms = list(split = "gini"))
+# Plot the decision tree
+library(rpart.plot)
+rpart.plot(dataset.cart)
+```
+
+```{r}
+#the result
+testPredc <- predict(dataset.cart, newdata = testData, type = "class")
+resultc <- table(testPredc, testData$Status)
+```
+
+```{r}
+#Evaluate the model:
+co_resultc <- confusionMatrix(resultc)
+print(co_resultc)
+sensitivity(as.table(co_resultc))
+specificity(as.table(co_resultc))
+precision(as.table(co_resultc))
+accc <- co_resultc$overall["Accuracy"]
+accc
+```
+
+We made decision tree classification using the CARAT algorithm (gini
+index) on a dataset then we split the dataset into 70% training and 30%
+testing. For visualization the tree In this case, the tree is built
+using the variables Age, estrogen.Status, Reginol.Node.Positive, and
+Survival.Months to know the status (0 dead, 1 alive). Survival months
+has minimum Gini index so it's the root. For the Predictions , they are
+made on the test set using the trained decision tree. we calculated
+confusion matrix, sensitivity, specificity, precision, and overall
+accuracy . And the accuracy was high(88.8%) which indicates that a
+significant portion of the predictions made by the model match the
+actual outcomes in the test dataset.
+
+# Tree 3 70% training and 30% testing using gain ratio
+
+```{r}
+#tree3 using gain ratio
+# Install and load the C50 package if not already installed
+# install.packages("C50")
+library(C50)
+library(partykit)
+library(party)
+# Using C4.5 (C5.0) with C50
+dataset.c45 <- C5.0(myFormula, data = trainData)
+# Print the tree rules
+summary(dataset.c45)
+```
+
+```{r}
+# Make predictions on the test set
+testPreds <- predict(dataset.c45, newdata = testData)
+results <- table(testPreds, testData$Status)
+c45_party <- as.party(dataset.c45)
+```
+
+```{r}
+# Plot the decision tree
+plot(c45_party)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+
+co_results <- confusionMatrix(results)
+print(co_results)
+sensitivity(as.table(co_results))
+specificity(as.table(co_results))
+precision(as.table(co_results))
+accs <- co_results$overall["Accuracy"]
+accs
+
+```
+
+We made decision tree classification using the C5.0 algorithm (gain
+ratio) on a dataset then we split the dataset into 70% training and 30%
+testing. For visualization the tree In this case, The most important
+attribute is "Survival.Months" with 100% usage, followed by
+"Marital.status," "x6TH.stage," and "Reginol.Node.Positive". The size of
+the tree is indicated by the number of nodes. In this case, the tree has
+a size of 10 nodes. The tree has 225 errors, representing a
+misclassification rate of 8% For the Predictions , they are made on the
+test set using the trained decision tree. we calculated confusion
+matrix, sensitivity, specificity, precision, and overall accuracy . And
+the accuracy was high(88.6%) which indicates that a significant portion
+of the predictions made by the model match the actual outcomes in the
+test dataset.
+
+# Tree 4 80% training and 20% testing using information gain
+
+```{r}
+
+# Split the dataset into 80% training and 20% testing subsets
+indfo <- sample(1:nrow(dataset), size = floor(0.8 * nrow(dataset)), replace = FALSE)
+train.Data <- dataset[indfo,]
+test.Data <- dataset[-indfo,]
+```
+
+```{r}
+# tree4 using information gain
+# Using ID3 with rpart
+datasetID3 <- rpart(myFormula, data = train.Data, method = "class", parms = list(split = "information"))
+print(datasetID3)  # Display cp table for pruning
+
+# Plot the decision tree
+rpart.plot(datasetID3)
+
+```
+
+```{r}
+# Make predictions on the test set
+testPredec <- predict(datasetID3, newdata = test.Data, type = "class")
+resultdd<- table(testPredec, test.Data$Status)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+coresult <- confusionMatrix(resultdd)
+print(coresult)
+sensitivity(as.table(coresult))
+specificity(as.table(coresult))
+precision(as.table(coresult))
+accur<- coresult$overall["Accuracy"]
+accur
+```
+
+The formula myFormula is used to define the target variable (Status) and
+predictor variables for the classification.
+
+We made decision tree classification using the ID3 algorithm
+(information gain) on a dataset then we split the dataset into 80%
+training and 20% testing. For visualization the tree In this case, the
+output lists the variables that are actually used in constructing the
+classification tree which are the following variables are used: Age,
+Estrogen.Status, X6TH.Stage, Survival.Months to know the status (0 dead,
+1 alive). Survival months has the highest Information Gain so it's
+chosen as the splitting criterion at each node of the decision tree.
+
+For the Predictions , they are made on the test set using the trained
+decision tree. we calculated confusion matrix, sensitivity, specificity,
+precision, and overall accuracy . And the accuracy was high(90%) which
+indicates that a significant portion of the predictions made by the
+model match the actual outcomes in the test dataset.
+
+# Tree 5 80% training and 20% testing using gini index
+
+```{r}
+#tree5 using gini index
+# Using CART with rpart
+datasetcart <- rpart(myFormula, data = train.Data, method = "class", parms = list(split = "gini"))
+
+# Plot the decision tree
+library(rpart.plot)
+rpart.plot(dataset.cart)
+```
+
+```{r}
+#result
+testPredcs<- predict(datasetcart, newdata = test.Data, type = "class")
+resultcs <- table(testPredcs, test.Data$Status)
+```
+
+```{r}
+#Evaluate the model:
+co_resultcg <- confusionMatrix(resultcs)
+print(co_resultcg)
+sensitivity(as.table(co_resultcg))
+specificity(as.table(co_resultcg))
+precision(as.table(co_resultcg))
+acccu<- co_resultcg$overall["Accuracy"]
+acccu
+```
+
+We made decision tree classification using the CARAT algorithm (gini
+index) on a dataset then we split the dataset into 80% training and 20%
+testing. For visualization the tree In this case, the tree is built
+using the variables Age, Progesterone.Status, Reginol.Node.Positive, ,
+survival months to know the status (0 dead, 1 alive). Survival months
+has minimum Gini index so it's the root.
+
+For the Predictions , they are made on the test set using the trained
+decision tree. we calculated confusion matrix, sensitivity, specificity,
+precision, and overall accuracy . And the accuracy was high(90.5%) which
+indicates that a significant portion of the predictions made by the
+model match the actual outcomes in the test dataset as well as the other
+measurements.
+
+# Tree 6 80% training and 20% testing using gain ratio
+
+```{r}
+#tree6 using gain ratio
+# Install and load the C50 package if not already installed
+# install.packages("C50")
+library(C50)
+library(partykit)
+library(party)
+# Using C4.5 (C5.0) with C50
+datasetc45 <- C5.0(myFormula, data = train.Data)
+# Print the tree rules
+summary(datasetc45)
+```
+
+```{r}
+# Make predictions on the test set
+testPredsn <- predict(datasetc45, newdata = test.Data)
+resultsn<- table(testPredsn, test.Data$Status)
+c45party <- as.party(datasetc45)
+
+```
+
+```{r}
+# Plot the decision tree
+plot(c45party)
+
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+
+co_resultsu <- confusionMatrix(resultsn)
+print(co_resultsu)
+sensitivity(as.table(co_resultsu))
+specificity(as.table(co_resultsu))
+precision(as.table(co_resultsu))
+accsn <- co_resultsu$overall["Accuracy"]
+accsn
+```
+
+The following is a 20% testing and 80% Training information gain ratio
+created where the classification label is known (pre-classified) for
+each record. Next, the algorithm systematically assigns each record to
+one of two subsets on the some basis ( Survival.Month \> 0.429 or
+Survival.Month \<=0.429). The object is to attain an homogeneous set of
+labels in each partitionThis partitioning (splitting) is then applied to
+each of the new partitions. The process continues until no more useful
+splits can be found. The goal is to build a tree that distinguishes
+among the classes. For visualization the tree In this case, The most
+important attribute is "Survival.Months" with 100% usage, followed by
+"estrogrn.status," "age," and "N.stage". The size of the tree is
+indicated by the number of nodes. In this case, the tree has a size of
+10 nodes. The tree has 283 errors, representing a misclassification rate
+of 8.8% For the Predictions , they are made on the test set using the
+trained decision tree. we calculated confusion matrix, sensitivity,
+specificity, precision, and overall accuracy . And the accuracy was
+high(90%) which indicates that a significant portion of the predictions
+made by the model match the actual outcomes in the test dataset.
+
+# Tree 7 60% training and 40% testing using information gain
+
+```{r}
+# Split the dataset into 60% training and 40% testing subsets
+indfod <- sample(1:nrow(dataset), size = floor(0.6 * nrow(dataset)), replace = FALSE)
+trainDataa <- dataset[indfod,]
+testDataa <- dataset[-indfod,]
+```
+
+```{r}
+#tree 7 using information gain
+# Using ID3 with rpart
+dataset.iID3<- rpart(myFormula, data = trainDataa, method = "class", parms = list(split = "information"))
+print(dataset.iID3)  # Display cp table for pruning
+
+```
+
+```{r}
+# Plot the decision tree
+rpart.plot(dataset.iID3)
+```
+
+```{r}
+# Make predictions on the test set
+testPredecy<- predict(dataset.iID3, newdata = testDataa, type = "class")
+resultddy<- table(testPredecy, testDataa$Status)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+
+coresulty <- confusionMatrix(resultddy)
+print(coresulty)
+sensitivity(as.table(coresulty))
+specificity(as.table(coresulty))
+precision(as.table(coresulty))
+accury<- coresulty$overall["Accuracy"]
+accury
+```
+
+The formula myFormula is used to define the target variable (Status) and
+predictor variables for the classification. We made decision tree
+classification using the ID3 algorithm (information gain) on a dataset
+then we split the dataset into 80% training and 20% testing. Next, the
+algorithm systematically assigns each record to one of two subsets on
+the some basis whether ( Survival.Month \<0.43) or not . The object is
+to attain an homogeneous set of labels in each partition This
+partitioning (splitting) is then applied to each of the new partitions.
+The process continues until no more useful splits can be found. The goal
+is to build a tree that distinguishes among the classes. For
+visualization the tree In this case, the output lists the variables that
+are actually used in constructing the classification tree which are the
+following variables are used: Age, X6TH.Stage, marital.status
+,Reginol.Node.examined, Survival.Months to know the status (0 dead, 1
+alive). Survival months has the highest Information Gain so it's chosen
+as the splitting criterion at each node of the decision tree.
+
+For the Predictions , they are made on the test set using the trained
+decision tree. we calculated confusion matrix, sensitivity, specificity,
+precision, and overall accuracy . And the accuracy was high(90.58%)
+which indicates that a significant portion of the predictions made by
+the model match the actual outcomes in the test dataset.
+
+# Tree 8 60% training and 40% testing using gini index
+
+```{r}
+#tree 8 using gini index
+# Using CART with rpart
+datasetcart. <- rpart(myFormula, data = trainDataa, method = "class", parms = list(split = "gini"))
+
+# Plot the decision tree
+library(rpart.plot)
+rpart.plot(datasetcart.)
+```
+
+```{r}
+#result
+
+testPredcse<- predict(datasetcart., newdata = testDataa, type = "class")
+resultcse <- table(testPredcse, testDataa$Status)
+```
+
+```{r}
+#Evaluate the model:
+co_resultcge <- confusionMatrix(resultcse)
+print(co_resultcge)
+sensitivity(as.table(co_resultcge))
+specificity(as.table(co_resultcge))
+precision(as.table(co_resultcge))
+acccue<- co_resultcge$overall["Accuracy"]
+acccue
+```
+
+The following is a 40% testing and 60% Training gini index created where
+the classification label is known (pre-classified) for each record.
+Next, the algorithm systematically assigns each record to one of two
+subsets on the some basis whether ( Survival.Month \<0.43) or not . The
+object is to attain an homogeneous set of labels in each partition This
+partitioning (splitting) is then applied to each of the new partitions.
+The process continues until no more useful splits can be found. The goal
+is to build a tree that distinguishes among the classes. For
+visualization the tree In this case, the tree is built using the
+variables Age, X6TH.Stage, marital.status ,Reginol.Node.examined,
+Survival.Monthsto know the status (0 dead, 1 alive). Survival months has
+minimum Gini index so it's the root.
+
+For the Predictions , they are made on the test set using the trained
+decision tree. we calculated confusion matrix, sensitivity, specificity,
+precision, and overall accuracy . And the accuracy was high(90.58%)
+which indicates that a significant portion of the predictions made by
+the model match the actual outcomes in the test dataset as well as the
+other measurements.
+
+# Tree 9 60% training and 40% testing using gain ratio
+
+```{r}
+#tree 9 using gain ratio
+# Install and load the C50 package if not already installed
+# install.packages("C50")
+library(C50)
+library(partykit)
+library(party)
+# Using C4.5 (C5.0) with C50
+datasetc45. <- C5.0(myFormula, data = trainDataa)
+
+# Print the tree rules
+summary(datasetc45.)
+```
+
+```{r}
+
+# Make predictions on the test set
+testPredsni <- predict(datasetc45., newdata = testDataa)
+resultsni<- table(testPredsni, testDataa$Status)
+c45party. <- as.party(datasetc45.)
+```
+
+```{r}
+# Plot the decision tree
+plot(c45party.)
+```
+
+```{r}
+#Evaluate the model:
+#install.packages("caret")
+#install.packages('e1071', dependencies=TRUE)
+library(e1071)
+library(caret)
+co_resultsui <- confusionMatrix(resultsni)
+print(co_resultsui)
+sensitivity(as.table(co_resultsui))
+specificity(as.table(co_resultsui))
+precision(as.table(co_resultsui))
+accsni <- co_resultsui$overall["Accuracy"]
+accsni
+```
+
+The following is a 40% testing and 60% Training information gain ratio
+created where the classification label is known (pre-classified) for
+each record. Next, the algorithm systematically assigns each record to
+one of two subsets on the some basis whether ( Survival.Month \> 0.429
+or Survival.Month \<=0.429).not . The object is to attain an homogeneous
+set of labels in each partitionThis partitioning (splitting) is then
+applied to each of the new partitions. The process continues until no
+more useful splits can be found. The goal is to build a tree that
+distinguishes among the classes. For visualization the tree In this
+case, The most important attribute is "Survival.Months" with 100% usage,
+followed by "age"," "estrogen.status," and
+,"Reginol.Node.Positive",T.stage". The size of the tree is indicated by
+the number of nodes. In this case, the tree has a size of 10 nodes. The
+tree has 223 errors, representing a misclassification rate of 9.3% For
+the Predictions , they are made on the test set using the trained
+decision tree. we calculated confusion matrix, sensitivity, specificity,
+precision, and overall accuracy . And the accuracy was high(90.3%) which
+indicates that a significant portion of the predictions made by the
+model match the actual outcomes in the test dataset.
+
+In summary, the three partitions (0.7 , 0.3 and 0.6 , 0.4 and 0.8 , 0.2)
+and the three attributes selection (IG, IG ratio, gini index) lead to
+similar results , such as all of them have high accuracy above(88% to
+90.6%) and other measurements have similar results. This is a positive
+sign indicating that the model's performance is consistent and not
+overly dependent on specific choices. Information Gain, Information Gain
+Ratio, and Gini Index algorithms lead to similar results, it indicates
+that, these metrics are providing comparable insights into the dataset.
+consistency across different partitions and attribute selection methods
+is a positive signal, it's advisable to perform thorough evaluation,
+including testing on a separate dataset, to ensure the model's
+reliability and generalization capabilities.
+
+# Clustring
+
+Clustering is unsupervised learning so there is no class label, it is
+the task of dividing the unlabeled data or data points into different
+clusters such that similar data points fall in the same cluster than
+those which differ from the others. In simple words, the aim of the
+clustering process is to segregate groups with similar traits and assign
+them into clusters. in this project we used the K-means algorithm, it is
+a centroid-based clustering algorithm. it works randomly selecting K
+objects as the centroids of K clusters. Then, it assigns the other
+objects to the nearest cluster to them by measuring the distance between
+the centroid and each object. Consequently, updates the clusters and
+compute the new centroids, then repeats until no significant change of
+clusters occurs. For the approach to work, numerical data and prior
+knowledge of the number of clusters K are required, K-Means works well
+with our dataset because we converted every entry to a numeric value in
+the stage of preprocessing. K-Means clustering was applied with the
+assistance of the the R packages and packages listed below: factoextra
+package: Extract and Visualize the Results of Multivariate Data
+Analyses. cluster package: provides methods for Cluster analysis.
+NbClust package: provides 30 indexes for determining the optimal number
+of clusters in data set and offers the best clustering scheme from
+different results. set.seed(): Create reproducible results kmeans():
+Clusters data based on similarity. fviz_cluster(): Visualize clustering
+results. silhouette(): Find the average for each and all clusters.
+fviz_silhouette(): Visualize the silhouette information. fviz_nbclust():
+Determining the optimal number of clusters.
+
+We will experiment with the following three values of k: (3,4,5). We
+will compute the average silhouette ,total within-cluster sum of square
+and the BCubed metrics (precision and recall) for each K.
+
+# Clustr of size=3
+
+this number was chosen after applying the silhouette method which shows
+that 3 is the optimal number for clustring This code applies the k-means
+clustering algorithm on the dataset, and then evaluates the clustering
+results using various metrics, including silhouette analysis and BCubed
+metrics.The BCubed metrics provide an evaluation of the clustering
+results by comparing them to ground truth label, assuming they are
+available in the 'datawithcl' dataset.
+
+here we load the necessary librarys, removing the class label and take
+copy of the old dataset
+
+```{r}
+#install.packages("factoextra")
+install.packages("cluster")
+install.packages("factoextra")
+install.packages("NbClust")
+library(factoextra)
+library(NbClust)
+library(cluster)
+
+datawithcl<-dataset #dataset with the class label) # dataset with a class label
+dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
+str(dataset)
+```
+
+converting factors columns in the dataset to numeric format. The columns
+converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,'
+'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,'
+and 'Progesterone.Status' since we are applying k-means this is
+imoprtant step
+
+```{r}
+numeric_dataset = dataset
+numeric_dataset$Race = as.numeric(as.character(dataset$Race))
+numeric_dataset$Marital.Status = as.numeric(as.character(dataset$Marital.Status))
+numeric_dataset$T.Stage = as.numeric(as.character(dataset$T.Stage))
+numeric_dataset$N.Stage = as.numeric(as.character(dataset$N.Stage))
+numeric_dataset$X6th.Stage = as.numeric(as.character(dataset$X6th.Stage))
+numeric_dataset$differentiate = as.numeric(as.character(dataset$differentiate))
+numeric_dataset$Grade = as.numeric(as.character(dataset$Grade))
+numeric_dataset$A.Stage = as.numeric(as.character(dataset$A.Stage))
+numeric_dataset$Estrogen.Status = as.numeric(as.character(dataset$Estrogen.Status))
+numeric_dataset$Progesterone.Status = as.numeric(as.character(dataset$Progesterone.Status))
+str(numeric_dataset)
+```
+
+appling the k-means clustering algorithm (kmeans function) to the
+preprocessed dataset with three clusters (centers = 3). The maximum
+number of iterations is set to 140, and the algorithm used is
+"Lloyd"which is an iterative method used to solve the k-means clustering
+problem. The algorithm minimizes the sum of squared distances between
+data points and the centroids (mean points) of their respective
+clusters. and The results are stored in the variable 'kmns'
+
+```{r}
+kmns <- kmeans(numeric_dataset, 3, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+kmns
+
+#using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
+
+library(factoextra)
+fviz_cluster(kmns, data = numeric_dataset, geom = "point", 
+             show.clust.cent = FALSE, ellipse = TRUE, 
+             repel = TRUE, ggtheme = theme_minimal())
+```
+
+in the graph above you can see the clusters overlapping which could be
+because of the nature of the data since most real-world medical datasets
+have inherently overlapping information, which could be best explained
+by allowing one sample belong to more than one cluster. In our dataset
+we have specific information about breast cancer specially the tumor
+such as tumor size, N stage, 6th stage, T stage, differentiation and
+grade. These attributes can contribute to why the overlapping happened.
+you can notice the high density in cluster 3 as it has 2705 samples and
+the lowest density is cluster 1 as it has 529 samples. The
+within-cluster sum of squares measures the variability or dispersion of
+data points within each cluster. Cluster 1 has the lowest within-cluster
+sum of squares (2468.133), followed by cluster 2 (2558.139), and cluster
+3 has the highest within-cluster sum of squares (7822.169). This
+suggests that data points within cluster 1 and cluster 2 are more
+tightly grouped or less dispersed compared to cluster 3, which has more
+variability within its data points. based on the within-cluster sum of
+squares, we can infer that clusters 1 and 2 have relatively more similar
+data points within each cluster, whereas cluster 3 has more diverse or
+dissimilar data points within the cluster.
+
+#calculates silhouette scores for the clustering results using the
+silhouette function and visualizes them using fviz_silhouette.
+
+```{r}
+#Cluster Validation
+library(cluster)
+#average for each cluster
+avg_sil <- silhouette(kmns$cluster,dist(numeric_dataset))
+fviz_silhouette(avg_sil)
+```
+
+the graph shows an average silhouette width of 0.38, it falls in the
+moderate range. It suggests that there is a reasonable level of
+separation and coherence among the clusters, but there may still be some
+overlap or ambiguity in the clustering results.
+
+#calculates and prints the within-cluster sum of squares (WCSS), which
+is a measure of the compactness of clusters. and print it
+
+```{r}
+# Calculate the WCSS
+wcss <- sum(kmns$withinss)
+
+# Print the WCSS
+print(wcss)
+```
+
+the WCSS value of 12848.44 suggests that there is a relatively high
+amount of variation within the clusters as a whole. This indicates that
+the data points within the clusters are not tightly packed around their
+respective centroids, and there may be significant overlap or
+uncertainty in the assignment of data points to clusters.
+
+#defines a function 'calculate_bcubed_metrics' to compute BCubed
+precision and recall. The function takes cluster assignments and ground
+truth labels(Status) as input and returns precision and recall. Then, it
+calculates and prints BCubed precision and recall for the clustering
+results.
+
+```{r}
+#BCubed Metrics
+cluster_assignments <- kmns$cluster
+ground_truth_labels <- datawithcl$Status
+
+calculate_bcubed_metrics <- function(cluster_assignments, ground_truth_labels) {
+  precision_sum <- recall_sum <- 0
+  
+  for (i in seq_along(cluster_assignments)) {
+    same_category_same_cluster <- sum(ground_truth_labels[cluster_assignments == cluster_assignments[i]] == ground_truth_labels[i])
+    total_same_cluster <- sum(cluster_assignments == cluster_assignments[i])
+    total_same_category <- sum(ground_truth_labels == ground_truth_labels[i])
+    
+    precision_sum <- precision_sum + same_category_same_cluster / total_same_cluster
+    recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+  
+  precision <- precision_sum / length(cluster_assignments)
+  recall <- recall_sum / length(cluster_assignments)
+  
+  return(list(precision = precision, recall = recall))
+}
+
+metrics <- calculate_bcubed_metrics(cluster_assignments, ground_truth_labels)
+precision <- metrics$precision
+recall <- metrics$recall
+
+cat("BCubed Precision:", precision)
+cat("BCubed Recall:", recall)
+```
+
+The precision score of 0.7567 suggests that, on average, around 75.67%
+of the data points assigned to a cluster are correctly assigned,
+reflecting the accuracy of the algorithm in clustering the data. The
+recall score of 0.5227 indicates that, on average, approximately 52.27%
+of the data points that should have been assigned to a cluster are
+indeed captured by the algorithm, showcasing its ability to identify
+relevant data points within each cluster. These results demonstrate a
+trade-off between precision and recall, where the algorithm achieves
+good precision but sacrifices some recall. From these results, we can
+conclude that the clustering algorithm has achieved relatively high
+precision (around 75.67%), indicating that the algorithm tends to assign
+data points correctly within each cluster. However, the recall value is
+moderate (around 52.27%), suggesting that the algorithm may have missed
+capturing a few portion of the similar data points within each cluster
+but still relatively good.
+
+#Clustr of size=4 this number was chosen randomlly
+
+```         
+```
+
+appling the k-means clustering algorithm (kmeans function) to the
+preprocessed dataset with three clusters (centers = 4). The maximum
+number of iterations is set to 140, and the algorithm used is
+"Lloyd"which is an iterative method used to solve the k-means clustering
+problem. The algorithm minimizes the sum of squared distances between
+data points and the centroids (mean points) of their respective
+clusters. and The results are stored in the variable 'kmns'
+
+```{r}
+kmns <- kmeans(numeric_dataset, 4, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+kmns
+#using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
+library(factoextra)
+fviz_cluster(kmns, data = numeric_dataset, geom = "point", 
+             show.clust.cent = FALSE, ellipse = TRUE, 
+             repel = TRUE, ggtheme = theme_minimal())
+```
+
+#in the graph above you can see the clusters overlapping which could be
+because of the nature of the data as we said previously. as shown
+cluster 3 shares the most simliarties with all other clusters, and
+cluster 1 is the most dissimilar with the other clusters. as why
+clusters 2&4 overlapped with cluster 3 it colud be due to there size
+since the large size clusters may tend to overlap with other clusters
+more frequently, they has the largest sizes 1547 & 1198. The
+within-cluster sum of squares measures the variability of data points
+within each cluster.It quantifies how close the data points within a
+cluster are to the centroid of the cluster the provided WCSS values
+indicate a relatively high amount of variation or spread within each
+cluster. Comparing the WCSS values of the clusters (2193.601, 3595.857,
+2482.538, and 2086.263) they are all relatively high, indicating that
+the data points within each cluster are more spread out and have a
+higher degree of variation. This suggests that the clusters have
+significant overlap between the data points in each cluster.
+
+#calculates silhouette scores for the clustering results using the
+silhouette function and visualizes them using fviz_silhouette.
+
+```{r}
+#Cluster Validation
+library(cluster)
+#average for each cluster
+avg_sil <- silhouette(kmns$cluster,dist(numeric_dataset))
+fviz_silhouette(avg_sil)
+```
+
+the graph shows an average silhouette width of 0.31, it falls in the
+moderate-low range. It suggests that there is a reasonable level of
+separation and coherence among the clusters, but there may still be some
+overlap or ambiguity in the clustering results.
+
+#calculates and prints the within-cluster sum of squares (WCSS), which
+is a measure of the compactness of clusters. and print it
+
+```{r}
+# Calculate the WCSS
+wcss <- sum(kmns$withinss)
+
+# Print the WCSS
+print(wcss)
+```
+
+the WCSS value of 10358.26 suggests that there is a relatively high
+amount of variation or spread within the clusters as a whole. This
+indicates that the data points within the clusters are not tightly
+packed around their respective centroids, and there may be significant
+overlap or uncertainty in the assignment of data points to clusters.
+
+#defines a function 'calculate_bcubed_metrics' to compute BCubed
+precision and recall. The function takes cluster assignments and ground
+truth labels(Status) as input and returns precision and recall. Then, it
+calculates and prints BCubed precision and recall for the clustering
+results. #BCubed Metrics
+
+```{r}
+cluster_assignments <- kmns$cluster
+ground_truth_labels <- datawithcl$Status
+
+calculate_bcubed_metrics <- function(cluster_assignments, ground_truth_labels) {
+  precision_sum <- recall_sum <- 0
+  
+  for (i in seq_along(cluster_assignments)) {
+    same_category_same_cluster <- sum(ground_truth_labels[cluster_assignments == cluster_assignments[i]] == ground_truth_labels[i])
+    total_same_cluster <- sum(cluster_assignments == cluster_assignments[i])
+    total_same_category <- sum(ground_truth_labels == ground_truth_labels[i])
+    
+    precision_sum <- precision_sum + same_category_same_cluster / total_same_cluster
+    recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+  
+  precision <- precision_sum / length(cluster_assignments)
+  recall <- recall_sum / length(cluster_assignments)
+  
+  return(list(precision = precision, recall = recall))
+}
+
+metrics <- calculate_bcubed_metrics(cluster_assignments, ground_truth_labels)
+precision <- metrics$precision
+recall <- metrics$recall
+
+cat("BCubed Precision:", precision)
+cat("BCubed Recall:", recall)
+```
+
+BCubed Precision: The BCubed Precision measures the quality of
+clustering in terms of how accurately the data points within each
+cluster are assigned. The value of 0.7575418 indicates that, on average,
+around 75.75% of the data points within the same cluster are correctly
+assigned.
+
+BCubed Recall: The BCubed Recall measures the completeness of clustering
+by evaluating how well the algorithm captures all the similar data
+points within each cluster. The value of 0.3003604 indicates that, on
+average, around 30.04% of the similar data points are captured within
+the same cluster.
+
+From these results, we can conclude that the clustering algorithm has
+achieved relatively high precision (around 75.75%), indicating that the
+algorithm tends to assign data points correctly within each cluster.
+However, the recall value is relatively low (around 30.04%), suggesting
+that the algorithm may have missed capturing a significant portion of
+the similar data points within each cluster.
+
+#Clustr of size=5 this number was chosen randomlly
+
+```         
+```
+
+appling the k-means clustering algorithm (kmeans function) to the
+preprocessed dataset with three clusters (centers = 4). The maximum
+number of iterations is set to 140, and the algorithm used is
+"Lloyd"which is an iterative method used to solve the k-means clustering
+problem. The algorithm minimizes the sum of squared distances between
+data points and the centroids (mean points) of their respective
+clusters. and The results are stored in the variable 'kmns'
+
+```{r}
+kmns <- kmeans(numeric_dataset, 5, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+kmns
+#using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
+library(factoextra)
+fviz_cluster(kmns, data = numeric_dataset, geom = "point", 
+             show.clust.cent = FALSE, ellipse = TRUE, 
+             repel = TRUE, ggtheme = theme_minimal())
+```
+
+#In the analysis of the clusters, it can be observed that there is some
+degree of overlap between the clusters, which could be due to the nature
+of the data, as mentioned earlier. Cluster 1 appears to share the most
+similarities with all other clusters, while Cluster 4 is the most
+dissimilar from the other clusters, the clusters 2&5 have the bigger
+size which is 1147&1119 that why they overlap the most with other
+clusters. The WCSS values for each cluster are as follows: 2432.738,
+1832.277, 1012.761, 2109.216, and 2016.868. indicate a relatively high
+amount of variation or spread within each cluster. These values suggest
+that the data points within each cluster are more spread out and exhibit
+a higher degree of variation. Consequently, this implies that the
+clusters have significant overlap between the data points assigned to
+each cluster. Comparing the WCSS values of the clusters, we can observe
+that Cluster 3 has the lowest WCSS value (1012.761), indicating that the
+data points within this cluster are relatively close to its centroid and
+have less variability or spread. On the other hand, Cluster 1 has the
+highest WCSS value (2432.738), suggesting that the data points within
+this cluster are more spread out and have higher variability.
+
+#calculates silhouette scores for the clustering results using the
+silhouette function and visualizes them using fviz_silhouette.
+
+```{r}
+#Cluster Validation
+library(cluster)
+#average for each cluster
+avg_sil <- silhouette(kmns$cluster,dist(numeric_dataset))
+fviz_silhouette(avg_sil)
+```
+
+With an average silhouette width of 0.3, it suggests that, on average,
+the data points within each cluster are reasonably well-assigned to
+their respective clusters and have a moderate degree of separation from
+the data points in other clusters. However, there may still be some
+overlap or ambiguity in the assignments, indicating that the clustering
+results might not be perfectly distinct.
+
+#calculates and prints the within-cluster sum of squares (WCSS), which
+is a measure of the compactness of clusters. and print it
+
+```{r}
+# Calculate the WCSS
+wcss <- sum(kmns$withinss)
+
+# Print the WCSS
+print(wcss)
+```
+
+the WCSS value of 9403.861 suggests that there is a relatively high
+amount of variation or spread within the clusters. This indicates that
+the data points within each cluster are more spread out and have a
+higher degree of variation.
+
+#defines a function 'calculate_bcubed_metrics' to compute BCubed
+precision and recall. The function takes cluster assignments and ground
+truth labels(Status) as input and returns precision and recall. Then, it
+calculates and prints BCubed precision and recall for the clustering
+results. #BCubed Metrics
+
+```{r}
+cluster_assignments <- kmns$cluster
+ground_truth_labels <- datawithcl$Status
+
+calculate_bcubed_metrics <- function(cluster_assignments, ground_truth_labels) {
+  precision_sum <- recall_sum <- 0
+  
+  for (i in seq_along(cluster_assignments)) {
+    same_category_same_cluster <- sum(ground_truth_labels[cluster_assignments == cluster_assignments[i]] == ground_truth_labels[i])
+    total_same_cluster <- sum(cluster_assignments == cluster_assignments[i])
+    total_same_category <- sum(ground_truth_labels == ground_truth_labels[i])
+    
+    precision_sum <- precision_sum + same_category_same_cluster / total_same_cluster
+    recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+  
+  precision <- precision_sum / length(cluster_assignments)
+  recall <- recall_sum / length(cluster_assignments)
+  
+  return(list(precision = precision, recall = recall))
+}
+
+metrics <- calculate_bcubed_metrics(cluster_assignments, ground_truth_labels)
+precision <- metrics$precision
+recall <- metrics$recall
+
+cat("BCubed Precision:", precision)
+cat("BCubed Recall:", recall)
+```
+
+Precision: The BCubed precision value of 0.7585169 suggests that, on
+average, the clustering results have a relatively high level of accuracy
+in terms of correctly labeling data points within the same cluster.
+Approximately 75.85% of the data points within the same cluster are
+correctly assigned and labeled together.
+
+Recall: The BCubed recall value of 0.2365074 indicates that, on average,
+the clustering results have a relatively low level of completeness in
+terms of correctly assigning all relevant data points to the same
+cluster. Approximately 23.65% of the relevant data points are correctly
+assigned to the same cluster.
+
+# Since choosing the optimal number of clusters can help represinting the data in the best way possible and saves much time. we employed the silhouette method to guide the selection of the optimal number of clusters
+
+# we have used "fviz_nbclust()" with silhouette method. it indicates that the optimal number of clusters is K=3.
+
+```{r}
+# silhouette method
+#a)fviz_nbclust() with silhouette method using library(factoextra)
+fviz_nbclust(numeric_dataset, kmeans, method = "silhouette")+labs(subtitle ="Silhouette method")
+```
+
+The plot consist of a line or curve that represents the silhouette
+scores for different numbers of clusters (k), The number of clusters in
+this graph is fixed at three. The ideal number of clusters is shown by
+the graph's highest point. This indicates the number of clusters that
+provide the optimal clustering solution and number of clusters that is
+often associated with a peak in the silhouette scores
+
+# Evaluation and Comparison
+
+mining task: classification
+
+Comparison Criteria : 70% training 30% testing
+
+|             | IG     | GINI INDEX | IG RATIO |
+|-------------|--------|------------|----------|
+| Sensitivity | 0.4396 | 0.4637     | 0.4637   |
+| Specificity | 0.9769 | 0.9769     | 0.9738   |
+| Precision   | 0.7982 | 0.8067     | 0.7868   |
+| Accuracy    | 0.8844 | 0.8886     | 0.8861   |
+
+Comparison Criteria : 80% training 20% testing
+
+|             | IG     | GINI INDEX | IG RATIO |
+|-------------|--------|------------|----------|
+| Sensitivity | 0.4958 | 0.52066    | 0.4710   |
+| Specificity | 0.9720 | 0.9735     | 0.9765   |
+| Precision   | 0.7594 | 0.7777     | 0.7808   |
+| Accuracy    | 0.9002 | 0.9052     | 0.9002   |
+
+Comparison Criteria : 60% training 40% testing
+
+|             | IG     | GINI INDEX | IG RATIO |
+|-------------|--------|------------|----------|
+| Sensitivity | 0.4708 | 0.4708     | 0.4416   |
+| Specificity | 0.9824 | 0.9824     | 0.9846   |
+| Precision   | 0.8248 | 0.8248     | 0.8346   |
+| Accuracy    | 0.9058 | 0.9058     | 0.9033   |
+
+mining task: clustering
+
+|                                     | K=3                                                       | K=4                      | K=5                      |
+|-----------------|----------------------|-----------------|-----------------|
+| Average Silhoutte width             | 0.38                                                      | 0.31                     | 0.30                     |
+| total wit hin-cluster sum of square | 1 2 848.44                                                | 1 0 358.26               | 9 4 03.861               |
+| BCubed precision                    | 0.7567                                                    | 0.7575                   | 0.7585                   |
+| BCubed recall                       | 0.5227                                                    | 0.3003                   | 0.2365                   |
+| Visualization                       | ![](images%2%200/clus3%%2020.png)![](images/clus3-01.png) | ![](images/clus4-01.png) | ![](images/clus5-01.png) |
+
+# Findings:
+
+Our focus in this project is on breast cancer, which is the most common
+invasive cancer among women worldwide. By researching and analyzing
+patient data, we aim to identify potential risk factors associated with
+breast cancer development and its spread, as well as discuss survival
+rates. This endeavor aims to raise awareness about the disease and
+encourage women to take preventive measures by estimating their
+individual risk based on specific factors. To ensure accurate and
+efficient results, we implemented various preprocessing techniques. For
+instance, we utilized plotting methods like boxplots and histograms to
+gain insights into the data and determine appropriate preprocessing
+steps. By removing null values, missing data, and outliers, we mitigated
+their negative impact on the results. Additionally, we performed data
+transformation, normalizing and discretizing attributes to achieve equal
+weighting and facilitate data handling during mining tasks.
+
+We proceeded with data mining tasks involving classification and
+clustering. For classification, we utilized the decision tree method to
+construct our model. To optimize the model's performance, we
+experimented with three different ratios of training and testing data.
+The results are as follows:
+
+When using 70% training data and 30% test data, the accuracy achieved
+was 88.8%.
+
+With 80% training data and 20% test data, the accuracy reached 90.52%.
+
+When utilizing 60% training data and 40% test data, the accuracy
+obtained was 90.58%.
+
+Among these models, the one with the best accuracy was the last model,
+employing 60% training data and 40% test data. This indicates that a
+majority of the tuples were correctly classified.
+
+![](images/treeeeeee.png)
+
+From the plot of the tree, we concluded the following results:
+
+The root of the tree is (Survival.Months) attribute which has the
+maximum information gain that split the data into a binary sub tree
+which has 4 nodes, the first node for tuples has Survival.Months \< 0.43
+and the second one Survival.Months \>= 0.43.
+
+From the first node, we can notice the number of tuples that has
+classified as "yes" is lower
+
+from the tuples with the class label "no".
+
+According to the tree the next node needs further portioning and was
+partitioned based on
+
+the Age attribute which has the maximum information gain for the subtree
+resulted
+
+from the second node with Survival.Months  \< 0.43.
+
+ This partition resulted another binary subtree where the first node for
+tuples has Age
+
+\>= 0.8 and the second one Age \< 0.8.
+
+From the second node, we can notice the number of tuples that has
+classified as "yes" is higher
+
+That the tuples with the class label "no".
+
+Based on the decision tree analysis, it was determined that the
+subsequent node required further partitioning. This partitioning was
+performed based on the X6th.Stage attribute, which exhibited the highest
+information gain within the subtree originating from the third node. The
+partitioning was specifically applied to instances where Age \< 0.8.
+
+This partition resulted another binary subtree where the first node for
+tuples has X6th.Stage
+
+= 2,4,5 and the second one represents the other values.
+
+From the third node, we can notice the number of tuples that has
+classified as "yes" is lower
+
+from the tuples with the class label "no".
+
+For the other values it needs more partitioning which represents the 4%
+of the previous partitioning, the first node going to be Marital.Status
+= 2,3,4,5 and the second one one represents the other values.
+
+From the fourth node, we can notice that the number of tuples with class
+label "yes"
+
+and the number of tuples with class label "no" are close to each other.
+
+The decision tree analysis indicated that additional partitioning was
+necessary for the last node. This partitioning was done by considering
+the Regional.Node.Examined attribute, The partitioning specifically
+focused on instances where the  value Marital.Status = 2,3,4,5.
+
+The last partition resulted another binary subtree where the first node
+for tuples has Regional.Node.Examined  \< 0.24 and the second one
+Regional.Node.Examined  \>= 0.24
+
+From the last node, we can conclude that the number of tuples with class
+label "yes"
+
+and the number of tuples with class label "no" are close to each other.
+
+for clustring: As was previously mentioned, we applied the K-means
+algorithm with three distinct values of K (K=3,4,5) to determine the
+optimal number of clusters. The average silhouette width, total
+within-cluster sum of squares, precision, and recall were employeed to
+evaluate the results. Our analysis of the data led us to the following
+conclusions: all the three K values has an overlapping representation
+but some the overlap is much stronger due to tha diffrent sizes.
+furthermore The overlapping of clusters is a common occurrence in
+real-world medical datasets, including the breast cancer dataset used in
+this study. The nature of the data, such as the various attributes
+related to tumor characteristics, can contribute to this overlapping
+phenomenon. It is worth noting that allowing one sample to belong to
+more than one cluster can provide a better representation of the complex
+relationships within the dataset.
+
+Based on the findings obtained from the evaluation of different
+clustering models:
+
+FOR K=3: The average silhouette width of 0.38 falls into the moderate
+range. This suggests that there is a reasonable level of separation and
+coherence among the clusters, but there may still be some overlap or
+ambiguity in the clustering results. It is important to further assess
+to improve the separation of clusters. The high WCSS value of 12848.44
+indicates a relatively high amount of variation within the clusters as a
+whole. This suggests that the data points within the clusters are not
+tightly packed around their respective centroids, and there may be
+significant overlap or uncertainty in the assignment of data points to
+clusters. The precision and recall scores ( 0.7567 and 0.5227)
+demonstrated the algorithm's ability to identify relevant data points
+within each cluster. However, there is a trade-off between precision and
+recall, as the algorithm achieves good precision but sacrifices some
+recall.
+
+FOR K=4: The average silhouette width decreased to 0.31 suggesting a
+lower level of separation and coherence among the clusters compared to
+K=3. The within-cluster sum of squares decreased to 10358.26, indicating
+reduced variation or spread within the clusters. The precision and
+recall scores (0.7575418 and 0.3003604) indicated a higher precision
+reuslt than k=3 but a significantly reduced recall result.
+
+FOR K=5: The average silhouette width further dropped to 0.3 for K=5,
+indicating less separation and coherence among the clusters compared to
+K=3&4. The within-cluster sum of squares decreased to 9403.861,
+indicating even lower variation or spread within the clusters compared
+to K=3 & 4. The precision and recall values (0.7585169 and 0.2365074)
+indicated a higher precision reuslt than k=3 but a significantly reduced
+recall result.
+
+Based on these findings, it appears that the K=3 clustering model is the
+optimal choice. It achieves the highest average silhouette width, recall
+value, and WCSS, indicating a reasonable level of separation, coherence,
+and the ability to identify relevant data points within each cluster.
+Furthermore, it exhibits the least overlap between clusters compared to
+the other models. also we noticed that the higher the K the lower recall
+value, WCSS, average silhouette width but the higher precision value.
+
+# Classification or Clustering?
+
+While both classification and clustering approaches proved useful in
+developing models for our data set that can aid in achieving our
+objective, and since the clustreing has an overlapping in all Ks with
+the highest accuracy being 75%. classification was deemed the most
+effective method since our dataset has a class label which is Stauts and
+the model exhibited remarkable accuracy which is 91%.
+
+# References:
+
+[1] "RPubs - Decision Tree Using (Information Gain)," rpubs.com.
+<https://rpubs.com/SameerMathur/DT_InformationGain_CCDefault>
+
+[2] "Outlier Analysis in R - Detect and Remove Outliers \|
+DigitalOcean," www.digitalocean.com.
+<https://www.digitalocean.com/community/tutorials/outlier-analysis-in-r>
+
+[3] "RPubs - Decision Tree (Gini)," rpubs.com.
+<https://rpubs.com/SameerMathur/DT_Gini_CCDefault>
+
+[4] S. Khanmohammadi, N. Adibeig, and S. Shanehbandy, "An improved
+overlapping k-means clustering method for medical applications," Expert
+Systems with Applications, vol. 67, pp. 12--18, Jan. 2017, doi:
+<https://doi.org/10.1016/j.eswa.2016.09.025>.
+
+‌‌[5] S. Kaushik, "An Introduction to Clustering & different methods of
+clustering," Analytics Vidhya, Mar. 11, 2019.
+<https://www.analyticsvidhya.com/blog/2016/11/an-introduction-to-clustering-and-different-methods-of-clustering/>
+‌
