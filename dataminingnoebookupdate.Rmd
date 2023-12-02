@@ -951,7 +951,7 @@ wcss <- sum(kmns$withinss)
 # Print the WCSS
 print(wcss)
 ```
-#the WCSS value is 12848.44. The higher the WCSS value, the greater the dispersion of data points within each cluster, indicating less compact and well-separated clusters.
+#the WCSS value of 12848.44 suggests that there is a relatively high amount of variation within the clusters as a whole. This indicates that the data points within the clusters are not tightly packed around their respective centroids, and there may be significant overlap or uncertainty in the assignment of data points to clusters.
 
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
 ```{r}
@@ -1013,6 +1013,11 @@ fviz_cluster(kmns, data = numeric_dataset, geom = "point",
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
 ```
+#in the graph above you can see the clusters overlapping which could be because of the nature of the data as we said previously.
+as shown cluster 3 shares the most simliarties with all other clusters, and cluster 1 is the most dissimilar with the other clusters. as why clusters 2&4 overlapped with cluster 3 it colud be due to there size since the large size clusters may tend to overlap with other clusters more frequently, they has the largest sizes  1547 & 1198.
+The within-cluster sum of squares measures the variability of data points within each cluster.It quantifies how close the data points within a cluster are to the centroid of the cluster
+the provided WCSS values indicate a relatively high amount of variation or spread within each cluster. Comparing the WCSS values of the clusters (2193.601, 3595.857, 2482.538, and 2086.263) they are all relatively high, indicating that the data points within each cluster are more spread out and have a higher degree of variation. This suggests that the clusters have significant overlap between the data points in each cluster.
+
 #calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
 ```{r}
 #Cluster Validation
@@ -1021,6 +1026,8 @@ library(cluster)
 avg_sil <- silhouette(kmns$cluster,dist(numeric_dataset))
 fviz_silhouette(avg_sil)
 ```
+the graph shows an average silhouette width of 0.31, it falls in the moderate-low range. It suggests that there is a reasonable level of separation and coherence among the clusters, but there may still be some overlap or ambiguity in the clustering results.
+
 
 #calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
 ```{r}
@@ -1030,6 +1037,8 @@ wcss <- sum(kmns$withinss)
 # Print the WCSS
 print(wcss)
 ```
+the WCSS value of 10358.26 suggests that there is a relatively high amount of variation or spread within the clusters as a whole. This indicates that the data points within the clusters are not tightly packed around their respective centroids, and there may be significant overlap or uncertainty in the assignment of data points to clusters.
+
 
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
 #BCubed Metrics
@@ -1062,7 +1071,11 @@ recall <- metrics$recall
 cat("BCubed Precision:", precision)
 cat("BCubed Recall:", recall)
 ```
+#BCubed Precision: The BCubed Precision measures the quality of clustering in terms of how accurately the data points within each cluster are assigned. The value of 0.7575418 indicates that, on average, around 75.75% of the data points within the same cluster are correctly assigned. 
 
+BCubed Recall: The BCubed Recall measures the completeness of clustering by evaluating how well the algorithm captures all the similar data points within each cluster. The value of 0.3003604 indicates that, on average, around 30.04% of the similar data points are captured within the same cluster. 
+
+From these results, we can conclude that the clustering algorithm has achieved relatively high precision (around 75.75%), indicating that the algorithm tends to assign data points correctly within each cluster. However, the recall value is relatively low (around 30.04%), suggesting that the algorithm may have missed capturing a significant portion of the similar data points within each cluster.
 
 
 
