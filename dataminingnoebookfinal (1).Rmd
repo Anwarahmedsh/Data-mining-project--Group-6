@@ -71,7 +71,7 @@ treatments.
 
 Goal: the clustering task aims to uncover patterns and subgroups within
 the patient population based on shared characteristics Utilizing
-clinical data such as T-Stage, age, and N-Stage. This enables a more
+clinical data such as T-Stage, tumor size, and N-Stage. This enables a more
 nuanced understanding of the heterogeneity of breast cancer,
 facilitating the identification of specific patient profiles that may
 have similar prognostic implications.
@@ -1197,8 +1197,6 @@ but still relatively good.
 
 #Clustr of size=4 this number was chosen randomlly
 
-```         
-```
 
 appling the k-means clustering algorithm (kmeans function) to the
 preprocessed dataset with three clusters (centers = 4). The maximum
@@ -1325,11 +1323,9 @@ the similar data points within each cluster.
 
 #Clustr of size=5 this number was chosen randomlly
 
-```         
-```
 
 appling the k-means clustering algorithm (kmeans function) to the
-preprocessed dataset with three clusters (centers = 4). The maximum
+preprocessed dataset with three clusters (centers = 5). The maximum
 number of iterations is set to 140, and the algorithm used is
 "Lloyd"which is an iterative method used to solve the k-means clustering
 problem. The algorithm minimizes the sum of squared distances between
