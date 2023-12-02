@@ -1206,8 +1206,22 @@ fviz_nbclust(numeric_dataset, kmeans, method = "silhouette")+labs(subtitle ="Sil
 # Findings
 
 
+for clustring:
+As was previously mentioned, we applied the K-means algorithm with three distinct values of K (K=3,4,5) to determine the optimal number of clusters. The average silhouette width, total within-cluster sum of squares, precision, and recall were employeed to evaluate the results.
+Our analysis of the data led us to the following conclusions:
+all the three K values has an overlapping representation but some the overlap is much stronger due to tha diffrent sizes.
+furthermore The overlapping of clusters is a common occurrence in real-world medical datasets, including the breast cancer dataset used in this study. The nature of the data, such as the various attributes related to tumor characteristics, can contribute to this overlapping phenomenon. It is worth noting that allowing one sample to belong to more than one cluster can provide a better representation of the complex relationships within the dataset.
 
+Based on the findings obtained from the evaluation of different clustering models, we can draw the following conclusions:
 
+K=3: The average silhouette width of 0.38 falls into the moderate range. This suggests that there is a reasonable level of separation and coherence among the clusters, but there may still be some overlap or ambiguity in the clustering results. It is important to further assess to improve the separation of clusters. The high WCSS value of 12848.44 indicates a relatively high amount of variation within the clusters as a whole. This suggests that the data points within the clusters are not tightly packed around their respective centroids, and there may be significant overlap or uncertainty in the assignment of data points to clusters. The precision and recall scores ( 0.7567 and 0.5227) demonstrated the algorithm's ability to identify relevant data points within each cluster. However, there is a trade-off between precision and recall, as the algorithm achieves good precision but sacrifices some recall.
 
+K=4: The average silhouette width decreased to 0.31  suggesting a lower level of separation and coherence among the clusters compared to K=3. The within-cluster sum of squares decreased to 10358.26, indicating reduced variation or spread within the clusters. The precision and recall scores (0.7575418 and 0.3003604) indicated a higher precision reuslt than k=3 but a significantly reduced recall result.
+
+K=5: The average silhouette width further dropped to 0.3 for K=5, indicating less separation and coherence among the clusters compared to K=3&4. The within-cluster sum of squares decreased to 9403.861, indicating even lower variation or spread within the clusters compared to K=3 & 4. The precision and recall values (0.7585169 and 0.2365074) indicated a higher precision reuslt than k=3 but a significantly reduced recall result.
+ 
+Based on these findings, we noticed that the higher K the lower recall value, WCSS, average silhouette width but the higher precision value.
+the k-Mean when k=3 clustering model appears to be the optimal choice. It achieved the highest average silhouette width, recall value, WCSS. indicating that there is a reasonable level of separation and coherence among the clusters,  ability to identify relevant data points within each cluster.
+Additionally, it exhibited the least overlap between clusters compared to the other models. 
 
 # References 
