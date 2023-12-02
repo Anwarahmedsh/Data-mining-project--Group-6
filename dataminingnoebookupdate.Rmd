@@ -1272,6 +1272,11 @@ FOR K=5: The average silhouette width further dropped to 0.3 for K=5, indicating
  
 Based on these findings, it appears that the K=3 clustering model is the optimal choice. It achieves the highest average silhouette width, recall value, and WCSS, indicating a reasonable level of separation, coherence, and the ability to identify relevant data points within each cluster. Furthermore, it exhibits the least overlap between clusters compared to the other models.
 also  we noticed that the higher the K the lower recall value, WCSS, average silhouette width but the higher precision value.
+
+# Classification or Clustering?
+While both classification and clustering approaches proved useful in developing models for our data set that can aid in achieving our objective, and since the clustreing has an overlapping in all Ks with the highest accuracy being 75%. classification was deemed the most effective method  since our dataset has a class label which is Stauts and the model exhibited remarkable accuracy which is 91%. 
+
+
 # References:
 [1] “RPubs - Decision Tree Using (Information Gain),” rpubs.com. https://rpubs.com/SameerMathur/DT_InformationGain_CCDefault
 [2] “Outlier Analysis in R - Detect and Remove Outliers | DigitalOcean,” www.digitalocean.com. https://www.digitalocean.com/community/tutorials/outlier-analysis-in-r
