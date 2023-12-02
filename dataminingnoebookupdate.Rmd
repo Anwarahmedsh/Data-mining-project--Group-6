@@ -1203,25 +1203,79 @@ fviz_nbclust(numeric_dataset, kmeans, method = "silhouette")+labs(subtitle ="Sil
 +--------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 
-# Findings
+# Findings:
+Our focus in this project is on breast cancer, which is the most common invasive cancer among women worldwide. By researching and analyzing patient data, we aim to identify potential risk factors associated with breast cancer development and its spread, as well as discuss survival rates. This endeavor aims to raise awareness about the disease and encourage women to take preventive measures by estimating their individual risk based on specific factors. To ensure accurate and efficient results, we implemented various preprocessing techniques. For instance, we utilized plotting methods like boxplots and histograms to gain insights into the data and determine appropriate preprocessing steps. By removing null values, missing data, and outliers, we mitigated their negative impact on the results. Additionally, we performed data transformation, normalizing and discretizing attributes to achieve equal weighting and facilitate data handling during mining tasks.
+
+We proceeded with data mining tasks involving classification and clustering. For classification, we utilized the decision tree method to construct our model. To optimize the model's performance, we experimented with three different ratios of training and testing data. The results are as follows:
+When using 70% training data and 30% test data, the accuracy achieved was 88.8%.
+With 80% training data and 20% test data, the accuracy reached 90.5%.
+When utilizing 60% training data and 40% test data, the accuracy obtained was 91%.
+
+Among these models, the one with the best accuracy was the last model, employing 60% training data and 40% test data. This indicates that a majority of the tuples were correctly classified.
+ //////////////////////////////////////////here is the pic////////////
+
+From the plot of the tree, we concluded the following results:
+
+The root of the tree is (Survival.Months) attribute which has the maximum information gain that split the data into a binary sub tree which has 4 nodes, the first node for tuples has Survival.Months < 0.43 and the second one Survival.Months >= 0.43.
+
+From the first node, we can notice the number of tuples that has classified as "yes" is lower
+from the tuples with the class label "no".
+
+According to the tree the next node needs further portioning and was partitioned based on
+the Age attribute which has the maximum information gain for the subtree resulted
+from the second node with Survival.Months  < 0.43.
+
+ This partition resulted another binary subtree where the first node for tuples has Age
+>= 0.8 and the second one Age < 0.8.
 
 
-for clustring:
+From the second node, we can notice the number of tuples that has classified as "yes" is higher 
+That the tuples with the class label "no".
+
+
+Based on the decision tree analysis, it was determined that the subsequent node required further partitioning. This partitioning was performed based on the X6th.Stage attribute, which exhibited the highest information gain within the subtree originating from the third node. The partitioning was specifically applied to instances where Age < 0.8.
+
+This partition resulted another binary subtree where the first node for tuples has X6th.Stage
+= 2,4,5 and the second one represents the other values.
+
+From the third node, we can notice the number of tuples that has classified as "yes" is lower
+from the tuples with the class label "no".
+
+
+For the other values it needs more partitioning which represents the 4% of the previous partitioning, the first node going to be Tumor.Size >= 0.13 and the second one is Tumor.Size < 0.13.
+
+From the fourth node, we can notice the number of tuples that has classified as "yes" is higher 
+than the tuples with the class label "no".
+
+The decision tree analysis indicated that additional partitioning was necessary for the last node. This partitioning was done by considering the differentiate attribute, which provided the greatest information gain within the subtree originating from the fourth node. The partitioning specifically focused on instances where the  value Tumor.Size >= 0.13 . 
+
+The last partition resulted another binary subtree where the first node for tuples has differentiate = 1,3 and the second one represents the other values.
+
+From the last node, we can conclude that the number of tuples with class label "yes"
+and the number of tuples with class label "no" are close to each other.
+
+
+
+ for clustring:
 As was previously mentioned, we applied the K-means algorithm with three distinct values of K (K=3,4,5) to determine the optimal number of clusters. The average silhouette width, total within-cluster sum of squares, precision, and recall were employeed to evaluate the results.
 Our analysis of the data led us to the following conclusions:
 all the three K values has an overlapping representation but some the overlap is much stronger due to tha diffrent sizes.
 furthermore The overlapping of clusters is a common occurrence in real-world medical datasets, including the breast cancer dataset used in this study. The nature of the data, such as the various attributes related to tumor characteristics, can contribute to this overlapping phenomenon. It is worth noting that allowing one sample to belong to more than one cluster can provide a better representation of the complex relationships within the dataset.
 
-Based on the findings obtained from the evaluation of different clustering models, we can draw the following conclusions:
+Based on the findings obtained from the evaluation of different clustering models:
 
-K=3: The average silhouette width of 0.38 falls into the moderate range. This suggests that there is a reasonable level of separation and coherence among the clusters, but there may still be some overlap or ambiguity in the clustering results. It is important to further assess to improve the separation of clusters. The high WCSS value of 12848.44 indicates a relatively high amount of variation within the clusters as a whole. This suggests that the data points within the clusters are not tightly packed around their respective centroids, and there may be significant overlap or uncertainty in the assignment of data points to clusters. The precision and recall scores ( 0.7567 and 0.5227) demonstrated the algorithm's ability to identify relevant data points within each cluster. However, there is a trade-off between precision and recall, as the algorithm achieves good precision but sacrifices some recall.
+FOR K=3: The average silhouette width of 0.38 falls into the moderate range. This suggests that there is a reasonable level of separation and coherence among the clusters, but there may still be some overlap or ambiguity in the clustering results. It is important to further assess to improve the separation of clusters. The high WCSS value of 12848.44 indicates a relatively high amount of variation within the clusters as a whole. This suggests that the data points within the clusters are not tightly packed around their respective centroids, and there may be significant overlap or uncertainty in the assignment of data points to clusters. The precision and recall scores ( 0.7567 and 0.5227) demonstrated the algorithm's ability to identify relevant data points within each cluster. However, there is a trade-off between precision and recall, as the algorithm achieves good precision but sacrifices some recall.
 
-K=4: The average silhouette width decreased to 0.31  suggesting a lower level of separation and coherence among the clusters compared to K=3. The within-cluster sum of squares decreased to 10358.26, indicating reduced variation or spread within the clusters. The precision and recall scores (0.7575418 and 0.3003604) indicated a higher precision reuslt than k=3 but a significantly reduced recall result.
+ FOR K=4: The average silhouette width decreased to 0.31  suggesting a lower level of separation and coherence among the clusters compared to K=3. The within-cluster sum of squares decreased to 10358.26, indicating reduced variation or spread within the clusters. The precision and recall scores (0.7575418 and 0.3003604) indicated a higher precision reuslt than k=3 but a significantly reduced recall result.
 
-K=5: The average silhouette width further dropped to 0.3 for K=5, indicating less separation and coherence among the clusters compared to K=3&4. The within-cluster sum of squares decreased to 9403.861, indicating even lower variation or spread within the clusters compared to K=3 & 4. The precision and recall values (0.7585169 and 0.2365074) indicated a higher precision reuslt than k=3 but a significantly reduced recall result.
+FOR K=5: The average silhouette width further dropped to 0.3 for K=5, indicating less separation and coherence among the clusters compared to K=3&4. The within-cluster sum of squares decreased to 9403.861, indicating even lower variation or spread within the clusters compared to K=3 & 4. The precision and recall values (0.7585169 and 0.2365074) indicated a higher precision reuslt than k=3 but a significantly reduced recall result.
  
-Based on these findings, we noticed that the higher K the lower recall value, WCSS, average silhouette width but the higher precision value.
-the k-Mean when k=3 clustering model appears to be the optimal choice. It achieved the highest average silhouette width, recall value, WCSS. indicating that there is a reasonable level of separation and coherence among the clusters,  ability to identify relevant data points within each cluster.
-Additionally, it exhibited the least overlap between clusters compared to the other models. 
-
-# References 
+Based on these findings, it appears that the K=3 clustering model is the optimal choice. It achieves the highest average silhouette width, recall value, and WCSS, indicating a reasonable level of separation, coherence, and the ability to identify relevant data points within each cluster. Furthermore, it exhibits the least overlap between clusters compared to the other models.
+also  we noticed that the higher the K the lower recall value, WCSS, average silhouette width but the higher precision value.
+# References:
+[1] “RPubs - Decision Tree Using (Information Gain),” rpubs.com. https://rpubs.com/SameerMathur/DT_InformationGain_CCDefault
+[2] “Outlier Analysis in R - Detect and Remove Outliers | DigitalOcean,” www.digitalocean.com. https://www.digitalocean.com/community/tutorials/outlier-analysis-in-r
+[3] “RPubs - Decision Tree (Gini),” rpubs.com. https://rpubs.com/SameerMathur/DT_Gini_CCDefault
+[4] S. Khanmohammadi, N. Adibeig, and S. Shanehbandy, “An improved overlapping k-means clustering method for medical applications,” Expert Systems with Applications, vol. 67, pp. 12–18, Jan. 2017, doi: https://doi.org/10.1016/j.eswa.2016.09.025.
+‌‌[5] S. Kaushik, “An Introduction to Clustering & different methods of clustering,” Analytics Vidhya, Mar. 11, 2019. https://www.analyticsvidhya.com/blog/2016/11/an-introduction-to-clustering-and-different-methods-of-clustering/
+‌
