@@ -900,7 +900,7 @@ dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the 
 str(dataset)
 ``` 
 
-#converting intger columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
+#converting factors columns in the dataset to numeric format. The columns converted include 'Race,' 'Marital.Status,' 'T.Stage,' 'N.Stage,' 'X6th.Stage,' 'differentiate,' 'Grade,' 'A.Stage,' 'Estrogen.Status,' and 'Progesterone.Status' since we are applying k-means this is imoprtant step
 ```{r}
 numeric_dataset = dataset
 numeric_dataset$Race = as.numeric(as.character(dataset$Race))
@@ -995,7 +995,6 @@ cat("BCubed Recall:", recall)
 #Clustr of size=4
 #this number was chosen randomlly
 ```{r}
-
 library(factoextra)
 library(NbClust)
 library(cluster)
@@ -1004,42 +1003,37 @@ datawithcl<-dataset #dataset with the class label) # dataset with a class label
 dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
 str(dataset)
 ```
-```{r}
-
-
 #appling the k-means clustering algorithm (kmeans function) to the preprocessed dataset with three clusters (centers = 4). The maximum number of iterations is set to 140, and the algorithm used is "Lloyd"which is an iterative method used to solve the k-means clustering problem. The algorithm minimizes the sum of squared distances between data points and the centroids (mean points) of their respective clusters. and The results are stored in the variable 'kmns'
-
+```{r}
 kmns <- kmeans(numeric_dataset, 4, iter.max = 140 , algorithm="Lloyd", nstart=100) 
 kmns
-```
-```{r}
 #using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
-
 library(factoextra)
 fviz_cluster(kmns, data = numeric_dataset, geom = "point", 
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
 ```
-
-```{r}
 #calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
+```{r}
 #Cluster Validation
 library(cluster)
 #average for each cluster
 avg_sil <- silhouette(kmns$cluster,dist(numeric_dataset))
 fviz_silhouette(avg_sil)
-
+```
 
 #calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
+```{r}
 # Calculate the WCSS
 wcss <- sum(kmns$withinss)
 
 # Print the WCSS
 print(wcss)
-
+```
 
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
 #BCubed Metrics
+```{r}
 cluster_assignments <- kmns$cluster
 ground_truth_labels <- datawithcl$Status
 
@@ -1075,49 +1069,45 @@ cat("BCubed Recall:", recall)
 #Clustr of size=5
 #this number was chosen randomlly
 ```{r}
-
 library(factoextra)
 library(NbClust)
 library(cluster)
 
 datawithcl<-dataset #dataset with the class label) # dataset with a class label
 dataset <- dataset[, -which(names(dataset) == "Status")] #creates a copy of the dataset called datawithcl with the class label and then removes the class label column from the original dataset
-
 str(dataset)
-
-
-#appling the k-means clustering algorithm (kmeans function) to the preprocessed dataset with three clusters (centers = 5). The maximum number of iterations is set to 140, and the algorithm used is "Lloyd"which is an iterative method used to solve the k-means clustering problem. The algorithm minimizes the sum of squared distances between data points and the centroids (mean points) of their respective clusters. and The results are stored in the variable 'kmns'
-
+```
+#appling the k-means clustering algorithm (kmeans function) to the preprocessed dataset with three clusters (centers = 4). The maximum number of iterations is set to 140, and the algorithm used is "Lloyd"which is an iterative method used to solve the k-means clustering problem. The algorithm minimizes the sum of squared distances between data points and the centroids (mean points) of their respective clusters. and The results are stored in the variable 'kmns'
+```{r}
 kmns <- kmeans(numeric_dataset, 5, iter.max = 140 , algorithm="Lloyd", nstart=100) 
 kmns
-
 #using the fviz_cluster function from the factoextra library to visualize the clustering results. The visualization includes points representing data, cluster centers, and ellipses around clusters.
-
 library(factoextra)
 fviz_cluster(kmns, data = numeric_dataset, geom = "point", 
              show.clust.cent = FALSE, ellipse = TRUE, 
              repel = TRUE, ggtheme = theme_minimal())
-
-
-
+```
 #calculates silhouette scores for the clustering results using the silhouette function and visualizes them using fviz_silhouette.
+```{r}
 #Cluster Validation
 library(cluster)
 #average for each cluster
 avg_sil <- silhouette(kmns$cluster,dist(numeric_dataset))
 fviz_silhouette(avg_sil)
-
+```
 
 #calculates and prints the within-cluster sum of squares (WCSS), which is a measure of the compactness of clusters. and print it
+```{r}
 # Calculate the WCSS
 wcss <- sum(kmns$withinss)
 
 # Print the WCSS
 print(wcss)
-
+```
 
 #defines a function 'calculate_bcubed_metrics' to compute BCubed precision and recall. The function takes cluster assignments and ground truth labels(Status) as input and returns precision and recall. Then, it calculates and prints BCubed precision and recall for the clustering results.
 #BCubed Metrics
+```{r}
 cluster_assignments <- kmns$cluster
 ground_truth_labels <- datawithcl$Status
 
